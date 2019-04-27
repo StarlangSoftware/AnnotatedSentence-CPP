@@ -8,4 +8,4 @@ link_directories(library)
 
 add_library(AnnotatedSentence ViewLayerType.h AnnotatedWord.cpp AnnotatedWord.h AnnotatedSentence.cpp AnnotatedSentence.h)
 
-target_link_libraries(AnnotatedSentence Dictionary MorphologicalAnalysis NamedEntityRecognition Propbank)
+target_link_libraries(AnnotatedSentence Dictionary MorphologicalAnalysis NamedEntityRecognition Propbank WordNet)

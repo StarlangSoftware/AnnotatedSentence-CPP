@@ -40,3 +40,158 @@ bool AnnotatedSentence::containsPredicate() {
     }
     return false;
 }
+
+bool AnnotatedSentence::updateConnectedPredicate(string previousId, string currentId) {
+    bool modified = false;
+    for (Word* word : words){
+        auto* annotatedWord = (AnnotatedWord*) word;
+        if (annotatedWord->getArgument() != nullptr && !annotatedWord->getArgument()->getId().empty() && annotatedWord->getArgument()->getId() == previousId){
+            annotatedWord->setArgument(annotatedWord->getArgument()->getArgumentType() + "$" + currentId);
+            modified = true;
+        }
+    }
+    return modified;
+}
+
+vector<AnnotatedWord *> AnnotatedSentence::predicateCandidates(FramesetList& framesetList) {
+    vector<AnnotatedWord*> candidateList;
+    for (Word* word : words){
+        auto* annotatedWord = (AnnotatedWord*) word;
+        if (annotatedWord->getParse() != nullptr && annotatedWord->getParse()->isVerb() && !annotatedWord->getSemantic().empty() && framesetList.frameExists(annotatedWord->getSemantic())){
+            candidateList.emplace_back(annotatedWord);
+        }
+    }
+    for (int i = 0; i < 2; i++){
+        for (int j = 0; j < words.size() - i - 1; j++){
+            auto* annotatedWord = (AnnotatedWord*) words.at(j);
+            auto* nextAnnotatedWord = (AnnotatedWord*) words.at(j + 1);
+            if (find(candidateList.begin(), candidateList.end(), annotatedWord) == candidateList.end() && find(candidateList.begin(), candidateList.end(), nextAnnotatedWord) != candidateList.end() && !annotatedWord->getSemantic().empty() && annotatedWord->getSemantic() == nextAnnotatedWord->getSemantic()){
+                candidateList.emplace_back(annotatedWord);
+            }
+        }
+    }
+    return candidateList;
+}
+
+string AnnotatedSentence::getPredicate(int index) {
+    int count1  = 0, count2 = 0;
+    string data;
+    vector<AnnotatedWord*> word;
+    vector<MorphologicalParse*> parse;
+    if (index < wordCount()){
+        for (int i = 0; i < wordCount(); i++) {
+            word.emplace_back((AnnotatedWord*) getWord(i));
+            parse.emplace_back(word.at(i)->getParse());
+        }
+        for (int i = index; i >= 0; i--) {
+            if (parse.at(i) != nullptr && !parse.at(i)->getRootPos().empty() && !parse.at(i)->getPos().empty() && parse.at(i)->getRootPos() == "VERB" && parse.at(i)->getPos() == "VERB"){
+                count1 = index - i;
+                break;
+            }
+        }
+        for (int i = index; i < wordCount() - index; i++) {
+            if (parse.at(i) != nullptr && !parse.at(i)->getRootPos().empty() && !parse.at(i)->getPos().empty() && parse.at(i)->getRootPos() == "VERB" && parse.at(i)->getPos() == "VERB"){
+                count2 = i - index;
+                break;
+            }
+        }
+        if (count1 > count2){
+            data = word.at(count1)->getName();
+        }
+        else{
+            data = word.at(count2)->getName();
+        }
+    }
+    return data;
+}
+
+void AnnotatedSentence::removeWord(int index) {
+    words.erase(words.begin() + index);
+}
+
+vector<Literal> AnnotatedSentence::constructLiterals(WordNet& wordNet, FsmMorphologicalAnalyzer& fsm, int wordIndex) {
+    auto* word = (AnnotatedWord*) getWord(wordIndex);
+    vector<Literal> possibleLiterals;
+    MorphologicalParse* morphologicalParse = word->getParse();
+    MetamorphicParse* metamorphicParse = word->getMetamorphicParse();
+    vector<Literal> added = wordNet.constructLiterals(morphologicalParse->getWord()->getName(), *morphologicalParse, *metamorphicParse, fsm);
+    possibleLiterals.insert(possibleLiterals.end(), added.begin(), added.end());
+    AnnotatedWord* firstSucceedingWord = nullptr;
+    AnnotatedWord* secondSucceedingWord = nullptr;
+    if (wordCount() > wordIndex + 1) {
+        firstSucceedingWord = (AnnotatedWord*) getWord(wordIndex + 1);
+        if (wordCount() > wordIndex + 2) {
+            secondSucceedingWord = (AnnotatedWord*) getWord(wordIndex + 2);
+        }
+    }
+    if (firstSucceedingWord != nullptr) {
+        if (secondSucceedingWord != nullptr) {
+            added = wordNet.constructIdiomLiterals(*(word->getParse()), *(firstSucceedingWord->getParse()), *(secondSucceedingWord->getParse()), *(word->getMetamorphicParse()), *(firstSucceedingWord->getMetamorphicParse()), *(secondSucceedingWord->getMetamorphicParse()), fsm);
+            possibleLiterals.insert(possibleLiterals.end(), added.begin(), added.end());
+        }
+        added = wordNet.constructIdiomLiterals(*(word->getParse()), *(firstSucceedingWord->getParse()), *(word->getMetamorphicParse()), *(firstSucceedingWord->getMetamorphicParse()), fsm);
+        possibleLiterals.insert(possibleLiterals.end(), added.begin(), added.end());
+    }
+    return possibleLiterals;
+}
+
+vector<SynSet> AnnotatedSentence::constructSynSets(WordNet wordNet, FsmMorphologicalAnalyzer fsm, int wordIndex) {
+    AnnotatedWord* word = (AnnotatedWord*) getWord(wordIndex);
+    vector<SynSet> possibleSynSets;
+    MorphologicalParse* morphologicalParse = word->getParse();
+    if (morphologicalParse == nullptr){
+        return possibleSynSets;
+    }
+    MetamorphicParse* metamorphicParse = word->getMetamorphicParse();
+    vector<SynSet> added = wordNet.constructSynSets(morphologicalParse->getWord()->getName(), *morphologicalParse, *metamorphicParse, fsm);
+    possibleSynSets.insert(possibleSynSets.end(), added.begin(), added.end());
+    AnnotatedWord* firstPrecedingWord = nullptr;
+    AnnotatedWord* secondPrecedingWord = nullptr;
+    AnnotatedWord* firstSucceedingWord = nullptr;
+    AnnotatedWord* secondSucceedingWord = nullptr;
+    if (wordIndex > 0) {
+        firstPrecedingWord = (AnnotatedWord*) getWord(wordIndex - 1);
+        if (firstPrecedingWord->getParse() == nullptr){
+            return possibleSynSets;
+        }
+        if (wordIndex > 1) {
+            secondPrecedingWord = (AnnotatedWord*) getWord(wordIndex - 2);
+            if (secondPrecedingWord->getParse() == nullptr){
+                return possibleSynSets;
+            }
+        }
+    }
+    if (wordCount() > wordIndex + 1) {
+        firstSucceedingWord = (AnnotatedWord*) getWord(wordIndex + 1);
+        if (firstSucceedingWord->getParse() == nullptr){
+            return possibleSynSets;
+        }
+        if (wordCount() > wordIndex + 2) {
+            secondSucceedingWord = (AnnotatedWord*) getWord(wordIndex + 2);
+            if (secondSucceedingWord->getParse() == nullptr){
+                return possibleSynSets;
+            }
+        }
+    }
+    if (firstPrecedingWord != nullptr) {
+        if (secondPrecedingWord != nullptr) {
+            vector<SynSet> added = wordNet.constructIdiomSynSets(*(secondPrecedingWord->getParse()), *(firstPrecedingWord->getParse()), *(word->getParse()), *(secondPrecedingWord->getMetamorphicParse()), *(firstPrecedingWord->getMetamorphicParse()), *(word->getMetamorphicParse()), fsm);
+            possibleSynSets.insert(possibleSynSets.end(), added.begin(), added.end());
+        }
+        added = wordNet.constructIdiomSynSets(*(firstPrecedingWord->getParse()), *(word->getParse()), *(firstPrecedingWord->getMetamorphicParse()), *(word->getMetamorphicParse()), fsm);
+        possibleSynSets.insert(possibleSynSets.end(), added.begin(), added.end());
+    }
+    if (firstPrecedingWord != nullptr && firstSucceedingWord != nullptr) {
+        added = wordNet.constructIdiomSynSets(*(firstPrecedingWord->getParse()), *(word->getParse()), *(firstSucceedingWord->getParse()), *(firstPrecedingWord->getMetamorphicParse()), *(word->getMetamorphicParse()), *(firstSucceedingWord->getMetamorphicParse()), fsm);
+        possibleSynSets.insert(possibleSynSets.end(), added.begin(), added.end());
+    }
+    if (firstSucceedingWord != nullptr) {
+        if (secondSucceedingWord != nullptr) {
+            added = wordNet.constructIdiomSynSets(*(word->getParse()), *(firstSucceedingWord->getParse()), *(secondSucceedingWord->getParse()), *(word->getMetamorphicParse()), *(firstSucceedingWord->getMetamorphicParse()), *(secondSucceedingWord->getMetamorphicParse()), fsm);
+            possibleSynSets.insert(possibleSynSets.end(), added.begin(), added.end());
+        }
+        added = wordNet.constructIdiomSynSets(*(word->getParse()), *(firstSucceedingWord->getParse()), *(word->getMetamorphicParse()), *(firstSucceedingWord->getMetamorphicParse()), fsm);
+        possibleSynSets.insert(possibleSynSets.end(), added.begin(), added.end());
+    }
+    return possibleSynSets;
+}
