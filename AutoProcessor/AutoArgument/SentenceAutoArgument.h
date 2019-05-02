@@ -8,6 +8,6 @@
 #include "../../AnnotatedSentence.h"
 
 class SentenceAutoArgument{
-    virtual bool autoArgument(AnnotatedSentence sentence) = 0;
+    virtual bool autoArgument(AnnotatedSentence* sentence) = 0;
 };
 #endif //ANNOTATEDSENTENCE_SENTENCEAUTOARGUMENT_H

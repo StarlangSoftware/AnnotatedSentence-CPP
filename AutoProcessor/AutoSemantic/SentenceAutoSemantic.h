@@ -1,0 +1,19 @@
+//
+// Created by olcay on 2.05.2019.
+//
+
+#ifndef ANNOTATEDSENTENCE_SENTENCEAUTOSEMANTIC_H
+#define ANNOTATEDSENTENCE_SENTENCEAUTOSEMANTIC_H
+
+
+#include "../../AnnotatedSentence.h"
+
+class SentenceAutoSemantic {
+protected:
+    void autoLabelSingleSemantics(AnnotatedSentence* sentence);
+public:
+    void autoSemantic(AnnotatedSentence* sentence);
+};
+
+
+#endif //ANNOTATEDSENTENCE_SENTENCEAUTOSEMANTIC_H

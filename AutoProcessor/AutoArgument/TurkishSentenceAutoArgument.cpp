@@ -4,19 +4,19 @@
 
 #include "TurkishSentenceAutoArgument.h"
 
-bool TurkishSentenceAutoArgument::autoArgument(AnnotatedSentence sentence) {
+bool TurkishSentenceAutoArgument::autoArgument(AnnotatedSentence* sentence) {
     bool modified = false;
     string predicateId;
-    for (int i = 0; i < sentence.wordCount(); i++){
-        AnnotatedWord* word = (AnnotatedWord*) sentence.getWord(i);
+    for (int i = 0; i < sentence->wordCount(); i++){
+        AnnotatedWord* word = (AnnotatedWord*) sentence->getWord(i);
         if (word->getArgument() != nullptr && word->getArgument()->getArgumentType() == "PREDICATE"){
             predicateId = word->getArgument()->getId();
             break;
         }
     }
     if (!predicateId.empty()){
-        for (int i = 0; i < sentence.wordCount(); i++){
-            AnnotatedWord* word = (AnnotatedWord*) sentence.getWord(i);
+        for (int i = 0; i < sentence->wordCount(); i++){
+            AnnotatedWord* word = (AnnotatedWord*) sentence->getWord(i);
             if (word->getArgument() == nullptr){
                 if (word->getShallowParse() == "ÖZNE"){
                     if (word->getParse() != nullptr && word->getParse()->containsTag(MorphologicalTag::PASSIVE)){

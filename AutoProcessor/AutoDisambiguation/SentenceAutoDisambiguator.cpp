@@ -27,7 +27,7 @@ SentenceAutoDisambiguator::SentenceAutoDisambiguator(FsmMorphologicalAnalyzer& m
  * possibly multiple candidate morphological analyses for each candidate root word.
  * @param sentence The sentence to be disambiguated automatically.
  */
-void SentenceAutoDisambiguator::autoDisambiguate(AnnotatedSentence sentence) {
+void SentenceAutoDisambiguator::autoDisambiguate(AnnotatedSentence* sentence) {
     autoFillSingleAnalysis(sentence);
     autoDisambiguateSingleRootWords(sentence);
     autoDisambiguateMultipleRootWords(sentence);

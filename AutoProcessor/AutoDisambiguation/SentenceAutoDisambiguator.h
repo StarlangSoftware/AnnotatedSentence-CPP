@@ -6,6 +6,7 @@
 #define ANNOTATEDSENTENCE_SENTENCEAUTODISAMBIGUATOR_H
 #include <AutoDisambiguator.h>
 #include "../../AnnotatedSentence.h"
+
 /**
 * Abstract class to disambiguate a sentence automatically. By implementing 3 abstract methods,
 * the class can disambiguate
@@ -25,14 +26,14 @@ protected:
      * method should set the morphological analysis of the words with one possible morphological analysis.
      * @param sentence The sentence to be disambiguated automatically.
      */
-    virtual void autoFillSingleAnalysis(AnnotatedSentence sentence) = 0;
+    virtual void autoFillSingleAnalysis(AnnotatedSentence* sentence) = 0;
 
     /**
      * The written method should disambiguate words whose morphological analyses contain only one distinct root word.
      * For this case, the root word would be fixed, but the correct morphological analysis depends on the context.
      * @param sentence The sentence to be disambiguated automatically.
      */
-    virtual void autoDisambiguateSingleRootWords(AnnotatedSentence sentence) = 0;
+    virtual void autoDisambiguateSingleRootWords(AnnotatedSentence* sentence) = 0;
 
     /**
      * The written method should disambiguate morphological analyses where there are multiple candidate root words
@@ -41,11 +42,11 @@ protected:
      * To disambiguate between the root words, one can use the root word statistics.
      * @param sentence The sentence to be disambiguated automatically.
      */
-    virtual void autoDisambiguateMultipleRootWords(AnnotatedSentence sentence) = 0;
+    virtual void autoDisambiguateMultipleRootWords(AnnotatedSentence* sentence) = 0;
 
 public:
     SentenceAutoDisambiguator(FsmMorphologicalAnalyzer& morphologicalAnalyzer, RootWordStatistics& rootWordStatistics);
-    void autoDisambiguate(AnnotatedSentence sentence);
+    void autoDisambiguate(AnnotatedSentence* sentence);
 };
 
 

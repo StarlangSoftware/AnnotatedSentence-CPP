@@ -10,7 +10,7 @@
 
 class TurkishSentenceAutoArgument : public SentenceAutoArgument {
 public:
-    bool autoArgument(AnnotatedSentence sentence) override;
+    bool autoArgument(AnnotatedSentence* sentence) override;
 };
 
 
