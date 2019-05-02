@@ -10,7 +10,7 @@
 
 class SentenceAutoSemantic {
 protected:
-    void autoLabelSingleSemantics(AnnotatedSentence* sentence);
+    virtual void autoLabelSingleSemantics(AnnotatedSentence* sentence) = 0;
 public:
     void autoSemantic(AnnotatedSentence* sentence);
 };

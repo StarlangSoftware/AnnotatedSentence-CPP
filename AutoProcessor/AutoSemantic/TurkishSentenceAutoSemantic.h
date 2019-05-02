@@ -14,7 +14,7 @@ private:
 public:
     TurkishSentenceAutoSemantic(WordNet& turkishWordNet, FsmMorphologicalAnalyzer& fsm);
 protected:
-    void autoLabelSingleSemantics(AnnotatedSentence* sentence);
+    void autoLabelSingleSemantics(AnnotatedSentence* sentence) override;
 };
 
 

@@ -16,11 +16,11 @@
 
 class AnnotatedWord : public Word{
 private:
-    MorphologicalParse* parse;
-    MetamorphicParse* metamorphicParse;
+    MorphologicalParse* parse = nullptr;
+    MetamorphicParse* metamorphicParse = nullptr;
     string semantic;
-    NamedEntityType* namedEntityType;
-    Argument* argument;
+    NamedEntityType* namedEntityType = nullptr;
+    Argument* argument = nullptr;
     string shallowParse;
 public:
     ~AnnotatedWord() override;
