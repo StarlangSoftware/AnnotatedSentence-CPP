@@ -4,6 +4,11 @@
 
 #include "TurkishSentenceAutoNER.h"
 
+/**
+ * The method assigns the words "bay" and "bayan" PERSON tag. The method also checks the PERSON gazetteer, and if
+ * the word exists in the gazetteer, it assigns PERSON tag.
+ * @param sentence The sentence for which PERSON named entities checked.
+ */
 void TurkishSentenceAutoNER::autoDetectPerson(AnnotatedSentence *sentence) {
     for (int i = 0; i < sentence->wordCount(); i++){
         auto* word = (AnnotatedWord*) sentence->getWord(i);
@@ -16,6 +21,10 @@ void TurkishSentenceAutoNER::autoDetectPerson(AnnotatedSentence *sentence) {
     }
 }
 
+/**
+ * The method checks the LOCATION gazettteer, and if the word exists in the gazetteer, it assigns the LOCATION tag.
+ * @param sentence The sentence for which LOCATION named entities checked.
+ */
 void TurkishSentenceAutoNER::autoDetectLocation(AnnotatedSentence *sentence) {
     for (int i = 0; i < sentence->wordCount(); i++){
         auto* word = (AnnotatedWord*) sentence->getWord(i);
@@ -25,6 +34,11 @@ void TurkishSentenceAutoNER::autoDetectLocation(AnnotatedSentence *sentence) {
     }
 }
 
+/**
+ * The method assigns the words "corp.", "inc.", and "co" ORGANIZATION tag. The method also checks the
+ * ORGANIZATION gazetteer, and if the word exists in the gazetteer, it assigns ORGANIZATION tag.
+ * @param sentence The sentence for which ORGANIZATION named entities checked.
+ */
 void TurkishSentenceAutoNER::autoDetectOrganization(AnnotatedSentence *sentence) {
     for (int i = 0; i < sentence->wordCount(); i++){
         auto* word = (AnnotatedWord*) sentence->getWord(i);
@@ -37,6 +51,11 @@ void TurkishSentenceAutoNER::autoDetectOrganization(AnnotatedSentence *sentence)
     }
 }
 
+/**
+ * The method checks for the TIME entities using regular expressions. After that, if the expression is a TIME
+ * expression, it also assigns the previous texts, which are numbers, TIME tag.
+ * @param sentence The sentence for which TIME named entities checked.
+ */
 void TurkishSentenceAutoNER::autoDetectTime(AnnotatedSentence *sentence) {
     for (int i = 0; i < sentence->wordCount(); i++){
         auto* word = (AnnotatedWord*) sentence->getWord(i);
@@ -55,6 +74,11 @@ void TurkishSentenceAutoNER::autoDetectTime(AnnotatedSentence *sentence) {
     }
 }
 
+/**
+ * The method checks for the MONEY entities using regular expressions. After that, if the expression is a MONEY
+ * expression, it also assigns the previous text, which may included numbers or some monetarial texts, MONEY tag.
+ * @param sentence The sentence for which MONEY named entities checked.
+ */
 void TurkishSentenceAutoNER::autoDetectMoney(AnnotatedSentence *sentence) {
     for (int i = 0; i < sentence->wordCount(); i++){
         auto* word = (AnnotatedWord*) sentence->getWord(i);

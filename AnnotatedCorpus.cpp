@@ -5,6 +5,13 @@
 #include "AnnotatedCorpus.h"
 #include "AnnotatedSentence.h"
 
+/**
+ * A constructor of {@link AnnotatedCorpus} class which reads all {@link AnnotatedSentence} files with the file
+ * name satisfying the given pattern inside the given folder. For each file inside that folder, the constructor
+ * creates an AnnotatedSentence and puts in inside the list parseTrees.
+ * @param folder Folder where all sentences reside.
+ * @param fileList File list containing all sentences.
+ */
 AnnotatedCorpus::AnnotatedCorpus(string folder, string fileList) {
     ifstream corpusFile, sentenceFile;
     string line;
@@ -20,6 +27,11 @@ AnnotatedCorpus::AnnotatedCorpus(string folder, string fileList) {
     corpusFile.close();
 }
 
+/**
+ * An obsolete constructor of the {@link AnnotatedSentence} class. If the contents of all the sentences are inside
+ * a single file, this constructor can be called. Each line in this file corresponds to a single AnnotatedSentence.
+ * @param inputFile File containing the sentences.
+ */
 AnnotatedCorpus::AnnotatedCorpus(istream &inputFile) {
     string line;
     getline(inputFile, line);
@@ -29,6 +41,10 @@ AnnotatedCorpus::AnnotatedCorpus(istream &inputFile) {
     }
 }
 
+/**
+  * Creates a dictionary from the morphologically annotated words.
+  * @return A dictionary containing root forms of the morphological annotations of words.
+  */
 TxtDictionary AnnotatedCorpus::createDictionary() {
     TxtDictionary dictionary = TxtDictionary();
     for (int i = 0; i < sentenceCount(); i++){

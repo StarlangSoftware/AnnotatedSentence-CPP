@@ -5,6 +5,11 @@
 #include "AnnotatedWord.h"
 #include "NamedEntityType.h"
 
+/**
+ * Constructor for the {@link AnnotatedWord} class. Gets the word with its annotation layers as input and sets the
+ * corresponding layers.
+ * @param word Input word with annotation layers
+ */
 AnnotatedWord::AnnotatedWord(string word) {
     vector<string> splitLayers = Word::split(move(word), "[\\{\\}]");
     for (const string& layer:splitLayers){
@@ -46,6 +51,11 @@ AnnotatedWord::AnnotatedWord(string word) {
     }
 }
 
+/**
+ * Another constructor for {@link AnnotatedWord}. Gets the word and a namedEntityType and sets two layers.
+ * @param name Lemma of the word.
+ * @param namedEntityType Named entity of the word.
+ */
 AnnotatedWord::AnnotatedWord(string name, NamedEntityType* namedEntityType) : Word(move(name)) {
     this->namedEntityType = namedEntityType;
     parse = nullptr;
@@ -70,6 +80,11 @@ AnnotatedWord::~AnnotatedWord() {
     }
 }
 
+/**
+ * Converts an {@link AnnotatedWord} to string. For each annotation layer, the method puts a left brace, layer name,
+ * equal sign and layer value finishing with right brace.
+ * @return String form of the {@link AnnotatedWord}.
+ */
 string AnnotatedWord::to_string() {
     string result = "{turkish=" + name + "}";
     if (parse != nullptr){
@@ -93,6 +108,11 @@ string AnnotatedWord::to_string() {
     return result;
 }
 
+/**
+ * Another constructor for {@link AnnotatedWord}. Gets the word and morphological parse and sets two layers.
+ * @param name Lemma of the word.
+ * @param parse Morphological parse of the word.
+ */
 AnnotatedWord::AnnotatedWord(string name, MorphologicalParse *parse) : Word(move(name)) {
     this->parse = parse;
     this->namedEntityType = nullptr;
@@ -102,6 +122,11 @@ AnnotatedWord::AnnotatedWord(string name, MorphologicalParse *parse) : Word(move
     shallowParse = "";
 }
 
+/**
+ * Another constructor for {@link AnnotatedWord}. Gets the word and morphological parse and sets two layers.
+ * @param name Lemma of the word.
+ * @param parse Morphological parse of the word.
+ */
 AnnotatedWord::AnnotatedWord(string name, FsmParse *parse) : Word(move(name)){
     this->parse = parse;
     namedEntityType = nullptr;
@@ -111,6 +136,11 @@ AnnotatedWord::AnnotatedWord(string name, FsmParse *parse) : Word(move(name)){
     shallowParse = "";
 }
 
+/**
+ * Returns the value of a given layer.
+ * @param viewLayerType Layer for which the value questioned.
+ * @return The value of the given layer.
+ */
 string AnnotatedWord::getLayerInfo(ViewLayerType viewLayerType) {
     switch (viewLayerType){
         case ViewLayerType::INFLECTIONAL_GROUP:
@@ -142,10 +172,18 @@ string AnnotatedWord::getLayerInfo(ViewLayerType viewLayerType) {
     return "";
 }
 
+/**
+ * Returns the morphological parse layer of the word.
+ * @return The morphological parse of the word.
+ */
 MorphologicalParse *AnnotatedWord::getParse() {
     return parse;
 }
 
+/**
+ * Sets the morphological parse layer of the word.
+ * @param parseString The new morphological parse of the word in string form.
+ */
 void AnnotatedWord::setParse(string parseString) {
     if (!parseString.empty()){
         parse = new MorphologicalParse(parseString);
@@ -154,26 +192,50 @@ void AnnotatedWord::setParse(string parseString) {
     }
 }
 
+/**
+ * Returns the metamorphic parse layer of the word.
+ * @return The metamorphic parse of the word.
+ */
 MetamorphicParse *AnnotatedWord::getMetamorphicParse() {
     return metamorphicParse;
 }
 
+/**
+ * Sets the metamorphic parse layer of the word.
+ * @param parseString The new metamorphic parse of the word in string form.
+ */
 void AnnotatedWord::setMetamorphicParse(string parseString) {
     metamorphicParse = new MetamorphicParse(move(parseString));
 }
 
+/**
+ * Returns the semantic layer of the word.
+ * @return Sense id of the word.
+ */
 string AnnotatedWord::getSemantic() {
     return semantic;
 }
 
+/**
+ * Sets the semantic layer of the word.
+ * @param semantic New sense id of the word.
+ */
 void AnnotatedWord::setSemantic(string semantic) {
     this->semantic = move(semantic);
 }
 
+/**
+ * Returns the named entity layer of the word.
+ * @return Named entity tag of the word.
+ */
 NamedEntityType *AnnotatedWord::getNamedEntity() {
     return namedEntityType;
 }
 
+/**
+ * Sets the named entity layer of the word.
+ * @param namedEntity New named entity tag of the word.
+ */
 void AnnotatedWord::setNamedEntityType(string namedEntity) {
     if (!namedEntity.empty()){
         namedEntityType = new NamedEntityType(getNamedEntityType(namedEntity));
@@ -182,10 +244,18 @@ void AnnotatedWord::setNamedEntityType(string namedEntity) {
     }
 }
 
+/**
+ * Returns the semantic role layer of the word.
+ * @return Semantic role tag of the word.
+ */
 Argument *AnnotatedWord::getArgument() {
     return argument;
 }
 
+/**
+ * Sets the semantic role layer of the word.
+ * @param argument New semantic role tag of the word.
+ */
 void AnnotatedWord::setArgument(string argument) {
     if (!argument.empty()){
         this->argument = new Argument(argument);
@@ -194,10 +264,18 @@ void AnnotatedWord::setArgument(string argument) {
     }
 }
 
+/**
+ * Returns the shallow parse layer of the word.
+ * @return Shallow parse tag of the word.
+ */
 string AnnotatedWord::getShallowParse() {
     return shallowParse;
 }
 
+/**
+ * Sets the shallow parse layer of the word.
+ * @param parse New shallow parse tag of the word.
+ */
 void AnnotatedWord::setShallowParse(string parse) {
     this->shallowParse = move(parse);
 }

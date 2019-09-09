@@ -31,6 +31,11 @@ AnnotatedSentence::AnnotatedSentence(string sentence) {
     }
 }
 
+/**
+ * The method checks all words in the sentence and returns true if at least one of the words is annotated with
+ * PREDICATE tag.
+ * @return True if at least one of the words is annotated with PREDICATE tag; false otherwise.
+ */
 bool AnnotatedSentence::containsPredicate() {
     for (Word* word : words){
         auto* annotatedWord = (AnnotatedWord*) word;
@@ -53,6 +58,14 @@ bool AnnotatedSentence::updateConnectedPredicate(string previousId, string curre
     return modified;
 }
 
+/**
+ * The method returns all possible words, which is
+ * 1. Verb
+ * 2. Its semantic tag is assigned
+ * 3. A frameset exists for that semantic tag
+ * @param framesetList Frameset list that contains all frames for Turkish
+ * @return An array of words, which are verbs, semantic tags assigned, and framesetlist assigned for that tag.
+ */
 vector<AnnotatedWord *> AnnotatedSentence::predicateCandidates(FramesetList& framesetList) {
     vector<AnnotatedWord*> candidateList;
     for (Word* word : words){
@@ -73,6 +86,11 @@ vector<AnnotatedWord *> AnnotatedSentence::predicateCandidates(FramesetList& fra
     return candidateList;
 }
 
+/**
+ * Returns the i'th predicate in the sentence.
+ * @param index Predicate index
+ * @return The predicate with index index in the sentence.
+ */
 string AnnotatedSentence::getPredicate(int index) {
     int count1  = 0, count2 = 0;
     string data;
@@ -105,10 +123,24 @@ string AnnotatedSentence::getPredicate(int index) {
     return data;
 }
 
+/**
+ * Removes the i'th word from the sentence
+ * @param index Word index
+ */
 void AnnotatedSentence::removeWord(int index) {
     words.erase(words.begin() + index);
 }
 
+/**
+ * Creates a list of literal candidates for the i'th word in the sentence. It combines the results of
+ * 1. All possible root forms of the i'th word in the sentence
+ * 2. All possible 2-word expressions containing the i'th word in the sentence
+ * 3. All possible 3-word expressions containing the i'th word in the sentence
+ * @param wordNet Turkish wordnet
+ * @param fsm Turkish morphological analyzer
+ * @param wordIndex Word index
+ * @return List of literal candidates containing all possible root forms and multiword expressions.
+ */
 vector<Literal> AnnotatedSentence::constructLiterals(WordNet& wordNet, FsmMorphologicalAnalyzer& fsm, int wordIndex) {
     auto* word = (AnnotatedWord*) getWord(wordIndex);
     vector<Literal> possibleLiterals;
@@ -135,6 +167,16 @@ vector<Literal> AnnotatedSentence::constructLiterals(WordNet& wordNet, FsmMorpho
     return possibleLiterals;
 }
 
+/**
+ * Creates a list of synset candidates for the i'th word in the sentence. It combines the results of
+ * 1. All possible synsets containing the i'th word in the sentence
+ * 2. All possible synsets containing 2-word expressions, which contains the i'th word in the sentence
+ * 3. All possible synsets containing 3-word expressions, which contains the i'th word in the sentence
+ * @param wordNet Turkish wordnet
+ * @param fsm Turkish morphological analyzer
+ * @param wordIndex Word index
+ * @return List of synset candidates containing all possible root forms and multiword expressions.
+ */
 vector<SynSet> AnnotatedSentence::constructSynSets(WordNet wordNet, FsmMorphologicalAnalyzer fsm, int wordIndex) {
     AnnotatedWord* word = (AnnotatedWord*) getWord(wordIndex);
     vector<SynSet> possibleSynSets;
