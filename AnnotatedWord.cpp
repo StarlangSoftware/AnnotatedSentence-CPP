@@ -41,6 +41,11 @@ AnnotatedWord::AnnotatedWord(string word) {
                             } else {
                                 if (layerType == "shallowParse"){
                                     shallowParse = layerValue;
+                                } else {
+                                    if (layerType == "universalDependency"){
+                                        vector<string> values = Word::split(move(layerValue), "\\$");
+                                        universalDependency = new UniversalDependencyRelation(std::stoi(values.at(0)), values.at(1));
+                                    }
                                 }
                             }
                         }
@@ -63,21 +68,15 @@ AnnotatedWord::AnnotatedWord(string name, NamedEntityType* namedEntityType) : Wo
     semantic = "";
     argument = nullptr;
     shallowParse = "";
+    universalDependency = nullptr;
 }
 
 AnnotatedWord::~AnnotatedWord() {
-    if (namedEntityType != nullptr){
-        delete namedEntityType;
-    }
-    if (parse != nullptr){
-        delete parse;
-    }
-    if (metamorphicParse != nullptr){
-        delete metamorphicParse;
-    }
-    if (argument != nullptr){
-        delete argument;
-    }
+    delete namedEntityType;
+    delete parse;
+    delete metamorphicParse;
+    delete argument;
+    delete universalDependency;
 }
 
 /**
@@ -105,6 +104,9 @@ string AnnotatedWord::to_string() {
     if (!shallowParse.empty()){
         result = result + "{shallowParse=" + shallowParse + "}";
     }
+    if (universalDependency != nullptr){
+        result = result + "{universalDependency=" + std::to_string(universalDependency->to()) + "$" + universalDependency->to_string() + "}";
+    }
     return result;
 }
 
@@ -120,6 +122,7 @@ AnnotatedWord::AnnotatedWord(string name, MorphologicalParse *parse) : Word(move
     metamorphicParse = nullptr;
     semantic = "";
     shallowParse = "";
+    universalDependency = nullptr;
 }
 
 /**
@@ -134,6 +137,7 @@ AnnotatedWord::AnnotatedWord(string name, FsmParse *parse) : Word(move(name)){
     setMetamorphicParse(parse->getWithList());
     semantic = "";
     shallowParse = "";
+    universalDependency = nullptr;
 }
 
 /**
@@ -168,6 +172,12 @@ string AnnotatedWord::getLayerInfo(ViewLayerType viewLayerType) {
             if (argument != nullptr){
                 return argument->to_string();
             }
+            break;
+        case ViewLayerType::DEPENDENCY:
+            if (universalDependency != nullptr){
+                return std::to_string(universalDependency->to()) + "$" + universalDependency->to_string();
+            }
+            break;
     }
     return "";
 }
@@ -278,6 +288,23 @@ string AnnotatedWord::getShallowParse() {
  */
 void AnnotatedWord::setShallowParse(string parse) {
     this->shallowParse = move(parse);
+}
+
+/**
+ * Returns the universal dependency layer of the word.
+ * @return Universal dependency relation of the word.
+ */
+UniversalDependencyRelation* AnnotatedWord::getUniversalDependency() {
+    return universalDependency;
+}
+
+/**
+ * Sets the universal dependency layer of the word.
+ * @param to Word related to.
+ * @param dependencyType type of dependency the word is related to.
+ */
+void AnnotatedWord::setUniversalDependency(int to, string dependencyType) {
+    this->universalDependency = new UniversalDependencyRelation(to, move(dependencyType));
 }
 
 void AnnotatedWord::checkGazetteer(Gazetteer gazetteer) {
