@@ -20,6 +20,7 @@ public:
     bool containsPredicate();
     bool updateConnectedPredicate(string previousId, string currentId);
     vector<AnnotatedWord*> predicateCandidates(FramesetList& framesetList);
+    vector<AnnotatedSentence*> getShallowParseGroups();
     string getPredicate(int index);
     void removeWord(int index);
     vector<Literal> constructLiterals(WordNet& wordNet, FsmMorphologicalAnalyzer& fsm, int wordIndex);

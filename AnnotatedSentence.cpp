@@ -58,6 +58,27 @@ bool AnnotatedSentence::updateConnectedPredicate(string previousId, string curre
     return modified;
 }
 
+vector<AnnotatedSentence *> AnnotatedSentence::getShallowParseGroups() {
+    vector<AnnotatedSentence *> result;
+    AnnotatedWord* previousWord = nullptr;
+    AnnotatedSentence* current = nullptr;
+    for (Word* word : words){
+        auto* annotatedWord = (AnnotatedWord*) word;
+        if (previousWord == nullptr){
+            current = new AnnotatedSentence();
+        } else {
+            if (!previousWord->getShallowParse().empty() && previousWord->getShallowParse() != annotatedWord->getShallowParse()){
+                result.emplace_back(current);
+                current = new AnnotatedSentence();
+            }
+        }
+        current->addWord(word);
+        previousWord = annotatedWord;
+    }
+    result.emplace_back(current);
+    return result;
+}
+
 /**
  * The method returns all possible words, which is
  * 1. Verb
