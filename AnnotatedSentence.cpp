@@ -58,6 +58,10 @@ bool AnnotatedSentence::updateConnectedPredicate(string previousId, string curre
     return modified;
 }
 
+/**
+ * The method constructs all possible shallow parse groups of a sentence.
+ * @return Shallow parse groups of a sentence.
+ */
 vector<AnnotatedSentence *> AnnotatedSentence::getShallowParseGroups() {
     vector<AnnotatedSentence *> result;
     AnnotatedWord* previousWord = nullptr;
