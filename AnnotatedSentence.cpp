@@ -62,21 +62,21 @@ bool AnnotatedSentence::updateConnectedPredicate(string previousId, string curre
  * The method constructs all possible shallow parse groups of a sentence.
  * @return Shallow parse groups of a sentence.
  */
-vector<AnnotatedSentence *> AnnotatedSentence::getShallowParseGroups() {
-    vector<AnnotatedSentence *> result;
+vector<AnnotatedPhrase *> AnnotatedSentence::getShallowParseGroups() {
+    vector<AnnotatedPhrase *> result;
     AnnotatedWord* previousWord = nullptr;
-    AnnotatedSentence* current = nullptr;
-    for (Word* word : words){
-        auto* annotatedWord = (AnnotatedWord*) word;
+    AnnotatedPhrase* current = nullptr;
+    for (int i = 0; i < this->wordCount(); i++){
+        auto* annotatedWord = (AnnotatedWord*) getWord(i);
         if (previousWord == nullptr){
-            current = new AnnotatedSentence();
+            current = new AnnotatedPhrase(i, annotatedWord->getShallowParse());
         } else {
             if (!previousWord->getShallowParse().empty() && previousWord->getShallowParse() != annotatedWord->getShallowParse()){
                 result.emplace_back(current);
-                current = new AnnotatedSentence();
+                current = new AnnotatedPhrase(i, annotatedWord->getShallowParse());
             }
         }
-        current->addWord(word);
+        current->addWord(annotatedWord);
         previousWord = annotatedWord;
     }
     result.emplace_back(current);

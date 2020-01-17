@@ -11,6 +11,7 @@
 #include "Literal.h"
 #include "WordNet.h"
 #include "FsmMorphologicalAnalyzer.h"
+#include "AnnotatedPhrase.h"
 
 class AnnotatedSentence : public Sentence {
 public:
@@ -20,7 +21,7 @@ public:
     bool containsPredicate();
     bool updateConnectedPredicate(string previousId, string currentId);
     vector<AnnotatedWord*> predicateCandidates(FramesetList& framesetList);
-    vector<AnnotatedSentence*> getShallowParseGroups();
+    vector<AnnotatedPhrase*> getShallowParseGroups();
     string getPredicate(int index);
     void removeWord(int index);
     vector<Literal> constructLiterals(WordNet& wordNet, FsmMorphologicalAnalyzer& fsm, int wordIndex);
