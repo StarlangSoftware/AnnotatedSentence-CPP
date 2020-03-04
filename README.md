@@ -1,4 +1,6 @@
 # AnnotatedSentence
+You can also see either [Python](https://github.com/olcaytaner/AnnotatedSentence-Py) 
+or [Java](https://github.com/olcaytaner/AnnotatedSentence) repository.
 
 ## Data Format
 
