@@ -277,7 +277,7 @@ string AnnotatedSentence::toStems() {
         if (annotatedWord->getParse() != nullptr){
             result = annotatedWord->getParse()->getWord()->getName();
         } else {
-            result = words[0]->getName();
+            result = annotatedWord->getName();
         }
         for (int i = 1; i < words.size(); i++) {
             annotatedWord = (AnnotatedWord*) words[i];
