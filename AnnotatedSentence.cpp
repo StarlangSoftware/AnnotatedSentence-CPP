@@ -203,7 +203,7 @@ vector<Literal> AnnotatedSentence::constructLiterals(WordNet& wordNet, FsmMorpho
  * @return List of synset candidates containing all possible root forms and multiword expressions.
  */
 vector<SynSet> AnnotatedSentence::constructSynSets(WordNet wordNet, FsmMorphologicalAnalyzer fsm, int wordIndex) {
-    AnnotatedWord* word = (AnnotatedWord*) getWord(wordIndex);
+    auto* word = (AnnotatedWord*) getWord(wordIndex);
     vector<SynSet> possibleSynSets;
     MorphologicalParse* morphologicalParse = word->getParse();
     if (morphologicalParse == nullptr){
@@ -261,4 +261,34 @@ vector<SynSet> AnnotatedSentence::constructSynSets(WordNet wordNet, FsmMorpholog
         possibleSynSets.insert(possibleSynSets.end(), added.begin(), added.end());
     }
     return possibleSynSets;
+}
+
+/**
+ * The toStems method returns an accumulated string of each word's stems in words {@link ArrayList}.
+ * If the parse of the word does not exist, the method adds the surfaceform to the resulting string.
+ *
+ * @return String result which has all the stems of each item in words {@link ArrayList}.
+ */
+string AnnotatedSentence::toStems() {
+    string result;
+    AnnotatedWord* annotatedWord;
+    if (!words.empty()) {
+        annotatedWord = (AnnotatedWord*) words[0];
+        if (annotatedWord->getParse() != nullptr){
+            result = annotatedWord->getParse()->getWord()->getName();
+        } else {
+            result = words[0]->getName();
+        }
+        for (int i = 1; i < words.size(); i++) {
+            annotatedWord = (AnnotatedWord*) words[i];
+            if (annotatedWord->getParse() != nullptr){
+                result += " " + annotatedWord->getParse()->getWord()->getName();
+            } else {
+                result += " " + annotatedWord->getName();
+            }
+        }
+        return result;
+    } else {
+        return "";
+    }
 }

@@ -23,6 +23,7 @@ public:
     vector<AnnotatedWord*> predicateCandidates(FramesetList& framesetList);
     vector<AnnotatedPhrase*> getShallowParseGroups();
     string getPredicate(int index);
+    string toStems();
     void removeWord(int index);
     vector<Literal> constructLiterals(WordNet& wordNet, FsmMorphologicalAnalyzer& fsm, int wordIndex);
     vector<SynSet> constructSynSets(WordNet wordNet,FsmMorphologicalAnalyzer fsm, int wordIndex);
