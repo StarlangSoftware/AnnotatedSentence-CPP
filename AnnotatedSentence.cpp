@@ -5,6 +5,7 @@
 #include "AnnotatedSentence.h"
 #include "AnnotatedWord.h"
 #include <istream>
+#include <FrameNet.h>
 
 /**
  * Reads an annotated sentence from a text file.
@@ -46,12 +47,31 @@ bool AnnotatedSentence::containsPredicate() {
     return false;
 }
 
+/**
+ * The method checks all words in the sentence and returns true if at least one of the words is annotated with
+ * PREDICATE tag.
+ * @return True if at least one of the words is annotated with PREDICATE tag; false otherwise.
+ */
+bool AnnotatedSentence::containsFramePredicate() {
+    for (Word* word : words){
+        auto* annotatedWord = (AnnotatedWord*) word;
+        if (annotatedWord->getFrameElement() != nullptr && annotatedWord->getFrameElement()->getFrameElementType() == "PREDICATE"){
+            return true;
+        }
+    }
+    return false;
+}
+
 bool AnnotatedSentence::updateConnectedPredicate(string previousId, string currentId) {
     bool modified = false;
     for (Word* word : words){
         auto* annotatedWord = (AnnotatedWord*) word;
         if (annotatedWord->getArgument() != nullptr && !annotatedWord->getArgument()->getId().empty() && annotatedWord->getArgument()->getId() == previousId){
             annotatedWord->setArgument(annotatedWord->getArgument()->getArgumentType() + "$" + currentId);
+            modified = true;
+        }
+        if (annotatedWord->getFrameElement() != nullptr && annotatedWord->getFrameElement()->getId() != "" && annotatedWord->getFrameElement()->getId() == previousId){
+            annotatedWord->setFrameElement(annotatedWord->getFrameElement()->getFrameElementType() + "$" + annotatedWord->getFrameElement()->getFrame() + "$" + currentId);
             modified = true;
         }
     }
@@ -96,6 +116,34 @@ vector<AnnotatedWord *> AnnotatedSentence::predicateCandidates(FramesetList& fra
     for (Word* word : words){
         auto* annotatedWord = (AnnotatedWord*) word;
         if (annotatedWord->getParse() != nullptr && annotatedWord->getParse()->isVerb() && !annotatedWord->getSemantic().empty() && framesetList.frameExists(annotatedWord->getSemantic())){
+            candidateList.emplace_back(annotatedWord);
+        }
+    }
+    for (int i = 0; i < 2; i++){
+        for (int j = 0; j < words.size() - i - 1; j++){
+            auto* annotatedWord = (AnnotatedWord*) words.at(j);
+            auto* nextAnnotatedWord = (AnnotatedWord*) words.at(j + 1);
+            if (find(candidateList.begin(), candidateList.end(), annotatedWord) == candidateList.end() && find(candidateList.begin(), candidateList.end(), nextAnnotatedWord) != candidateList.end() && !annotatedWord->getSemantic().empty() && annotatedWord->getSemantic() == nextAnnotatedWord->getSemantic()){
+                candidateList.emplace_back(annotatedWord);
+            }
+        }
+    }
+    return candidateList;
+}
+
+/**
+ * The method returns all possible words, which is
+ * 1. Verb
+ * 2. Its semantic tag is assigned
+ * 3. A frameset exists for that semantic tag
+ * @param framesetList Frameset list that contains all frames for Turkish
+ * @return An array of words, which are verbs, semantic tags assigned, and framesetlist assigned for that tag.
+ */
+vector<AnnotatedWord *> AnnotatedSentence::predicateFrameCandidates(FrameNet& frameNet) {
+    vector<AnnotatedWord*> candidateList;
+    for (Word* word : words){
+        auto* annotatedWord = (AnnotatedWord*) word;
+        if (annotatedWord->getParse() != nullptr && annotatedWord->getParse()->isVerb() && !annotatedWord->getSemantic().empty() && frameNet.lexicalUnitExists(annotatedWord->getSemantic())){
             candidateList.emplace_back(annotatedWord);
         }
     }

@@ -12,6 +12,7 @@
 #include <Argument.h>
 #include <FsmParse.h>
 #include <UniversalDependencyRelation.h>
+#include <FrameElement.h>
 #include "ViewLayerType.h"
 #include "Gazetteer.h"
 
@@ -22,6 +23,7 @@ private:
     string semantic;
     NamedEntityType* namedEntityType = nullptr;
     Argument* argument = nullptr;
+    FrameElement* frameElement = nullptr;
     string shallowParse;
     UniversalDependencyRelation* universalDependency = nullptr;
 public:
@@ -42,6 +44,8 @@ public:
     void setNamedEntityType(string namedEntity);
     Argument* getArgument();
     void setArgument(string argument);
+    FrameElement* getFrameElement();
+    void setFrameElement(string frameElement);
     string getShallowParse();
     void setShallowParse(string parse);
     UniversalDependencyRelation* getUniversalDependency();

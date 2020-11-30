@@ -1,16 +1,16 @@
 //
-// Created by olcay on 2.05.2019.
+// Created by Olcay Taner YILDIZ on 30.11.2020.
 //
 
-#include "TurkishSentenceAutoPredicate.h"
+#include "TurkishSentenceAutoFramePredicate.h"
 
 /**
  * Constructor for {@link TurkishSentenceAutoPredicate}. Gets the FrameSets as input from the user, and sets
  * the corresponding attribute.
  * @param framesetList FramesetList containing the Turkish propbank frames.
  */
-TurkishSentenceAutoPredicate::TurkishSentenceAutoPredicate(FramesetList &xmlParser) {
-    this->xmlParser = xmlParser;
+TurkishSentenceAutoFramePredicate::TurkishSentenceAutoFramePredicate(FrameNet &frameNet) {
+    this->frameNet = frameNet;
 }
 
 /**
@@ -19,10 +19,10 @@ TurkishSentenceAutoPredicate::TurkishSentenceAutoPredicate(FramesetList &xmlPars
  * @param sentence The sentence for which predicates will be determined automatically.
  * @return If at least one word has been tagged, true; false otherwise.
  */
-bool TurkishSentenceAutoPredicate::autoPredicate(AnnotatedSentence *sentence) {
-    vector<AnnotatedWord*> candidateList = sentence->predicateCandidates(xmlParser);
+bool TurkishSentenceAutoFramePredicate::autoPredicate(AnnotatedSentence *sentence) {
+    vector<AnnotatedWord*> candidateList = sentence->predicateFrameCandidates(frameNet);
     for (AnnotatedWord* word : candidateList){
-        word->setArgument("PREDICATE$" + word->getSemantic());
+        word->setArgument("PREDICATE$NONE$" + word->getSemantic());
     }
     if (!candidateList.empty()){
         return true;

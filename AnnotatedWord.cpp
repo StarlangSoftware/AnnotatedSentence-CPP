@@ -45,6 +45,10 @@ AnnotatedWord::AnnotatedWord(string word) {
                                     if (layerType == "universalDependency"){
                                         vector<string> values = Word::split(move(layerValue), "\\$");
                                         universalDependency = new UniversalDependencyRelation(std::stoi(values.at(0)), values.at(1));
+                                    } else {
+                                        if (layerType == "framenet"){
+                                            frameElement = new FrameElement(layerValue);
+                                        }
                                     }
                                 }
                             }
@@ -69,6 +73,7 @@ AnnotatedWord::AnnotatedWord(string name, NamedEntityType* namedEntityType) : Wo
     argument = nullptr;
     shallowParse = "";
     universalDependency = nullptr;
+    frameElement = nullptr;
 }
 
 AnnotatedWord::~AnnotatedWord() {
@@ -77,6 +82,7 @@ AnnotatedWord::~AnnotatedWord() {
     delete metamorphicParse;
     delete argument;
     delete universalDependency;
+    delete frameElement;
 }
 
 /**
@@ -101,6 +107,9 @@ string AnnotatedWord::to_string() {
     if (argument != nullptr){
         result = result + "{propbank=" + argument->to_string() + "}";
     }
+    if (frameElement != nullptr){
+        result = result + "{framenet=" + frameElement->to_string() + "}";
+    }
     if (!shallowParse.empty()){
         result = result + "{shallowParse=" + shallowParse + "}";
     }
@@ -123,6 +132,7 @@ AnnotatedWord::AnnotatedWord(string name, MorphologicalParse *parse) : Word(move
     semantic = "";
     shallowParse = "";
     universalDependency = nullptr;
+    frameElement = nullptr;
 }
 
 /**
@@ -138,6 +148,7 @@ AnnotatedWord::AnnotatedWord(string name, FsmParse *parse) : Word(move(name)){
     semantic = "";
     shallowParse = "";
     universalDependency = nullptr;
+    frameElement = nullptr;
 }
 
 /**
@@ -171,6 +182,11 @@ string AnnotatedWord::getLayerInfo(ViewLayerType viewLayerType) {
         case ViewLayerType::PROPBANK:
             if (argument != nullptr){
                 return argument->to_string();
+            }
+            break;
+        case ViewLayerType::FRAMENET:
+            if (frameElement != nullptr){
+                return frameElement->to_string();
             }
             break;
         case ViewLayerType::DEPENDENCY:
@@ -271,6 +287,26 @@ void AnnotatedWord::setArgument(string argument) {
         this->argument = new Argument(argument);
     } else {
         this->argument = nullptr;
+    }
+}
+
+/**
+ * Returns the framenet layer of the word.
+ * @return Framenet tag of the word.
+ */
+FrameElement *AnnotatedWord::getFrameElement() {
+    return frameElement;
+}
+
+/**
+ * Sets the framenet layer of the word.
+ * @param argument New framenet tag of the word.
+ */
+void AnnotatedWord::setFrameElement(string frameElement) {
+    if (!frameElement.empty()){
+        this->frameElement = new FrameElement(frameElement);
+    } else {
+        this->frameElement = nullptr;
     }
 }
 
