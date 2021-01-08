@@ -103,3 +103,5 @@ cmake-build-debug/CMakeFiles/AnnotatedSentence.dir/AutoProcessor/AutoPredicate/S
 cmake-build-debug/CMakeFiles/AnnotatedSentence.dir/AutoProcessor/AutoPredicate/TurkishSentenceAutoFramePredicate.cpp.o
 cmake-build-debug/CMakeFiles/TestAnnotatedCorpus.dir/AutoProcessor/AutoPredicate/SentenceAutoFramePredicate.cpp.o
 cmake-build-debug/CMakeFiles/TestAnnotatedCorpus.dir/AutoProcessor/AutoPredicate/TurkishSentenceAutoFramePredicate.cpp.o
+/cmake-build-debug/CMakeFiles/Test.dir/
+/cmake-build-debug/Test
