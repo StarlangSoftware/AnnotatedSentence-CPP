@@ -28,7 +28,5 @@ SentenceAutoDisambiguator::SentenceAutoDisambiguator(FsmMorphologicalAnalyzer& m
  * @param sentence The sentence to be disambiguated automatically.
  */
 void SentenceAutoDisambiguator::autoDisambiguate(AnnotatedSentence* sentence) {
-    autoFillSingleAnalysis(sentence);
-    autoDisambiguateSingleRootWords(sentence);
     autoDisambiguateMultipleRootWords(sentence);
 }

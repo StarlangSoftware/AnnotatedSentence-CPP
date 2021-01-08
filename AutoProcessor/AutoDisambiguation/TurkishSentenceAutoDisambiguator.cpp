@@ -15,38 +15,14 @@ TurkishSentenceAutoDisambiguator::TurkishSentenceAutoDisambiguator(FsmMorphologi
 }
 
 /**
- * The method disambiguates the words with a single morphological analysis. Basically the
- * method sets the morphological analysis of the words with one possible morphological analysis. If the word
- * is already morphologically disambiguated, the method does not disambiguate that word.
- * @param sentence The sentence to be disambiguated automatically.
- */
-void TurkishSentenceAutoDisambiguator::autoFillSingleAnalysis(AnnotatedSentence* sentence) {
-    for (int i = 0; i < sentence->wordCount(); i++){
-        auto* word = (AnnotatedWord*) sentence->getWord(i);
-        if (word->getParse() == nullptr){
-            FsmParseList fsmParseList = morphologicalAnalyzer.robustMorphologicalAnalysis(word->getName());
-            if (fsmParseList.size() == 1){
-                word->setParse(fsmParseList.getFsmParse(0).getTransitionList());
-                word->setMetamorphicParse(fsmParseList.getFsmParse(0).getWithList());
-            }
-        }
-    }
-}
-
-/**
  * If the words has only single root in its possible parses, the method disambiguates by looking special cases.
  * The cases are implemented in the caseDisambiguator method.
  * @param fsmParseList Morphological parses of the word.
  * @param word Word to be disambiguated.
  */
-void TurkishSentenceAutoDisambiguator::setParseAutomatically(FsmParseList fsmParseList, AnnotatedWord *word) {
-    if (fsmParseList.size() > 0 && fsmParseList.rootWords().find('$') == string::npos){
-        FsmParse* disambiguatedParse = fsmParseList.caseDisambiguator();
-        if (disambiguatedParse != nullptr){
-            word->setParse(disambiguatedParse->getTransitionList());
-            word->setMetamorphicParse(disambiguatedParse->getWithList());
-        }
-    }
+void TurkishSentenceAutoDisambiguator::setParseAutomatically(FsmParse disambiguatedParse, AnnotatedWord* word) {
+    word->setParse(disambiguatedParse.transitionlist());
+    word->setMetamorphicParse(disambiguatedParse.getWithList());
 }
 
 /**
@@ -58,33 +34,12 @@ void TurkishSentenceAutoDisambiguator::setParseAutomatically(FsmParseList fsmPar
  * @param sentence The sentence to be disambiguated automatically.
  */
 void TurkishSentenceAutoDisambiguator::autoDisambiguateMultipleRootWords(AnnotatedSentence* sentence) {
+    FsmParseList* fsmParses = morphologicalAnalyzer.robustMorphologicalAnalysis(*sentence);
+    vector<FsmParse> correctParses = rootWordStatisticsDisambiguation.disambiguate(fsmParses, sentence->wordCount());
     for (int i = 0; i < sentence->wordCount(); i++){
         auto* word = (AnnotatedWord*) sentence->getWord(i);
         if (word->getParse() == nullptr){
-            FsmParseList fsmParseList = morphologicalAnalyzer.robustMorphologicalAnalysis(word->getName());
-            if (fsmParseList.rootWords().find('$') != string::npos){
-                string bestRootWord = rootWordStatistics.bestRootWord(fsmParseList, 0.0);
-                if (!bestRootWord.empty()){
-                    fsmParseList.reduceToParsesWithSameRoot(bestRootWord);
-                }
-            }
-            setParseAutomatically(fsmParseList, word);
-        }
-    }
-}
-
-/**
- * The method disambiguates words with single possible root word in its morphological parses. If the word
- * is already morphologically disambiguated, the method does not disambiguate that word. Basically calls
- * setParseAutomatically method.
- * @param sentence The sentence to be disambiguated automatically.
- */
-void TurkishSentenceAutoDisambiguator::autoDisambiguateSingleRootWords(AnnotatedSentence* sentence) {
-    for (int i = 0; i < sentence->wordCount(); i++){
-        auto* word = (AnnotatedWord*) sentence->getWord(i);
-        if (word->getParse() == nullptr){
-            FsmParseList fsmParseList = morphologicalAnalyzer.robustMorphologicalAnalysis(word->getName());
-            setParseAutomatically(fsmParseList, word);
+            setParseAutomatically(correctParses.at(i), word);
         }
     }
 }

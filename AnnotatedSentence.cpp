@@ -12,10 +12,13 @@
  * @param inputFile File containing the annotated sentence.
  */
 AnnotatedSentence::AnnotatedSentence(istream &inputFile) {
-    string word;
-    while (inputFile.good()){
-        inputFile >> word;
-        words.emplace_back(new AnnotatedWord(word));
+    string line;
+    getline(inputFile, line);
+    vector<string> wordArray = Word::split(line);
+    for (auto const& word : wordArray){
+        if (!word.empty()){
+            words.emplace_back(new AnnotatedWord(word));
+        }
     }
 }
 

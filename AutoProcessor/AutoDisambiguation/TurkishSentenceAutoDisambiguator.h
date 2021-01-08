@@ -7,16 +7,16 @@
 
 
 #include "SentenceAutoDisambiguator.h"
+#include <RootWordStatisticsDisambiguation.h>
 
 class TurkishSentenceAutoDisambiguator : public SentenceAutoDisambiguator{
 public:
     TurkishSentenceAutoDisambiguator(FsmMorphologicalAnalyzer& morphologicalAnalyzer, RootWordStatistics& rootWordStatistics);
 protected:
-    void autoFillSingleAnalysis(AnnotatedSentence* sentence) override;
     void autoDisambiguateMultipleRootWords(AnnotatedSentence* sentence) override;
-    void autoDisambiguateSingleRootWords(AnnotatedSentence* sentence) override;
 private:
-    void setParseAutomatically(FsmParseList fsmParseList, AnnotatedWord* word);
+    RootWordStatisticsDisambiguation rootWordStatisticsDisambiguation;
+    void setParseAutomatically(FsmParse disambiguatedParse, AnnotatedWord* word);
 };
 
 

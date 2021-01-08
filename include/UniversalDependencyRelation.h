@@ -9,6 +9,7 @@
 #include <string>
 #include "DependencyRelation.h"
 #include "UniversalDependencyType.h"
+#include "UniversalDependencyPosType.h"
 
 using namespace std;
 
@@ -18,10 +19,14 @@ private:
 public:
     static const string universalDependencyTypes[37];
     static const UniversalDependencyType universalDependencyTags[37];
+    static const string universalDependencyPosTypes[17];
+    static const UniversalDependencyPosType universalDependencyPosTags[17];
     explicit UniversalDependencyRelation(int toWord);
     static UniversalDependencyType getDependencyTag(string tag);
+    static UniversalDependencyPosType getDependencyPosType(string tag);
     UniversalDependencyRelation(int toWord, string dependencyType);
     string to_string();
+    static string to_string(UniversalDependencyPosType posType);
 };
 
 

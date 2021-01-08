@@ -22,20 +22,6 @@
 class SentenceAutoDisambiguator : public AutoDisambiguator {
 protected:
     /**
-     * The written method should disambiguate the words with a single morphological analysis. Basically the
-     * method should set the morphological analysis of the words with one possible morphological analysis.
-     * @param sentence The sentence to be disambiguated automatically.
-     */
-    virtual void autoFillSingleAnalysis(AnnotatedSentence* sentence) = 0;
-
-    /**
-     * The written method should disambiguate words whose morphological analyses contain only one distinct root word.
-     * For this case, the root word would be fixed, but the correct morphological analysis depends on the context.
-     * @param sentence The sentence to be disambiguated automatically.
-     */
-    virtual void autoDisambiguateSingleRootWords(AnnotatedSentence* sentence) = 0;
-
-    /**
      * The written method should disambiguate morphological analyses where there are multiple candidate root words
      * and possibly multiple candidate morphological analyses for each candidate root word. If it finds the correct
      * morphological analysis of a word(s), it should set morphological analysis and metamorpheme of that(those) word(s).

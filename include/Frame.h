@@ -8,21 +8,23 @@
 #include <vector>
 #include <XmlElement.h>
 #include <XmlDocument.h>
-#include "LexicalUnit.h"
 
 using namespace std;
 
 class Frame {
 private:
     string name;
-    vector<LexicalUnit> lexicalUnits;
+    vector<string> lexicalUnits;
+    vector<string> frameElements;
 public:
-    Frame(string name, XmlDocument xmlDocument);
+    explicit Frame(string name);
     bool lexicalUnitExists(string synSetId);
-    LexicalUnit getLexicalUnitWithId(string synSetId);
-    void removeLexicalUnit(LexicalUnit toBeRemoved);
-    LexicalUnit getLexicalUnit(int index);
-    int size();
+    void addLexicalUnit(string lexicalUnit);
+    void addFrameElement(string frameElement);
+    string getLexicalUnit(int index);
+    string getFrameElement(int index);
+    int lexicalUnitSize();
+    int frameElementSize();
     string getName();
 };
 
