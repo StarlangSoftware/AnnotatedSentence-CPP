@@ -15,6 +15,7 @@
 #include <FrameElement.h>
 #include "ViewLayerType.h"
 #include "Gazetteer.h"
+#include "Slot.h"
 
 class AnnotatedWord : public Word{
 private:
@@ -25,6 +26,7 @@ private:
     Argument* argument = nullptr;
     FrameElement* frameElement = nullptr;
     string shallowParse;
+    Slot* slot = nullptr;
     UniversalDependencyRelation* universalDependency = nullptr;
 public:
     ~AnnotatedWord() override;
@@ -46,6 +48,8 @@ public:
     void setArgument(string argument);
     FrameElement* getFrameElement();
     void setFrameElement(string frameElement);
+    Slot* getSlot();
+    void setSlot(string slot);
     string getShallowParse();
     void setShallowParse(string parse);
     UniversalDependencyRelation* getUniversalDependency();

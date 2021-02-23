@@ -36,7 +36,7 @@ AnnotatedWord::AnnotatedWord(string word) {
                         if (layerType == "namedEntity"){
                             namedEntityType = new NamedEntityType(getNamedEntityType(layerValue));
                         } else {
-                            if (layerType == "propbank"){
+                            if (layerType == "propbank" || layerType == "propBank"){
                                 argument = new Argument(layerValue);
                             } else {
                                 if (layerType == "shallowParse"){
@@ -46,8 +46,12 @@ AnnotatedWord::AnnotatedWord(string word) {
                                         vector<string> values = Word::split(move(layerValue), "\\$");
                                         universalDependency = new UniversalDependencyRelation(std::stoi(values.at(0)), values.at(1));
                                     } else {
-                                        if (layerType == "framenet"){
+                                        if (layerType == "framenet" || layerType == "frameNet"){
                                             frameElement = new FrameElement(layerValue);
+                                        } else {
+                                            if (layerType == "slot"){
+                                                slot = new Slot(layerValue);
+                                            }
                                         }
                                     }
                                 }
@@ -67,13 +71,6 @@ AnnotatedWord::AnnotatedWord(string word) {
  */
 AnnotatedWord::AnnotatedWord(string name, NamedEntityType* namedEntityType) : Word(move(name)) {
     this->namedEntityType = namedEntityType;
-    parse = nullptr;
-    metamorphicParse = nullptr;
-    semantic = "";
-    argument = nullptr;
-    shallowParse = "";
-    universalDependency = nullptr;
-    frameElement = nullptr;
 }
 
 AnnotatedWord::~AnnotatedWord() {
@@ -116,6 +113,9 @@ string AnnotatedWord::to_string() {
     if (universalDependency != nullptr){
         result = result + "{universalDependency=" + std::to_string(universalDependency->to()) + "$" + universalDependency->to_string() + "}";
     }
+    if (slot != nullptr){
+        result = result + "{slot=" + slot->to_string() + "}";
+    }
     return result;
 }
 
@@ -126,13 +126,6 @@ string AnnotatedWord::to_string() {
  */
 AnnotatedWord::AnnotatedWord(string name, MorphologicalParse *parse) : Word(move(name)) {
     this->parse = parse;
-    this->namedEntityType = nullptr;
-    argument = nullptr;
-    metamorphicParse = nullptr;
-    semantic = "";
-    shallowParse = "";
-    universalDependency = nullptr;
-    frameElement = nullptr;
 }
 
 /**
@@ -142,13 +135,7 @@ AnnotatedWord::AnnotatedWord(string name, MorphologicalParse *parse) : Word(move
  */
 AnnotatedWord::AnnotatedWord(string name, FsmParse *parse) : Word(move(name)){
     this->parse = parse;
-    namedEntityType = nullptr;
-    argument = nullptr;
     setMetamorphicParse(parse->getWithList());
-    semantic = "";
-    shallowParse = "";
-    universalDependency = nullptr;
-    frameElement = nullptr;
 }
 
 /**
@@ -192,6 +179,11 @@ string AnnotatedWord::getLayerInfo(ViewLayerType viewLayerType) {
         case ViewLayerType::DEPENDENCY:
             if (universalDependency != nullptr){
                 return std::to_string(universalDependency->to()) + "$" + universalDependency->to_string();
+            }
+            break;
+        case ViewLayerType::SLOT:
+            if (slot != nullptr){
+                return slot->to_string();
             }
             break;
     }
@@ -307,6 +299,26 @@ void AnnotatedWord::setFrameElement(string frameElement) {
         this->frameElement = new FrameElement(frameElement);
     } else {
         this->frameElement = nullptr;
+    }
+}
+
+/**
+ * Returns the slot filling layer of the word.
+ * @return Slot tag of the word.
+ */
+Slot *AnnotatedWord::getSlot() {
+    return slot;
+}
+
+/**
+ * Sets the slot filling layer of the word.
+ * @param slot New slot tag of the word.
+ */
+void AnnotatedWord::setSlot(string slot) {
+    if (!slot.empty()){
+        this->slot = new Slot(slot);
+    } else {
+        this->slot = nullptr;
     }
 }
 
