@@ -51,6 +51,10 @@ AnnotatedWord::AnnotatedWord(string word) {
                                         } else {
                                             if (layerType == "slot"){
                                                 slot = new Slot(layerValue);
+                                            } else {
+                                                if (layerType == "polarity"){
+                                                    setPolarity(layerValue);
+                                                }
                                             }
                                         }
                                     }
@@ -80,6 +84,7 @@ AnnotatedWord::~AnnotatedWord() {
     delete argument;
     delete universalDependency;
     delete frameElement;
+    delete polarity;
 }
 
 /**
@@ -115,6 +120,9 @@ string AnnotatedWord::to_string() {
     }
     if (slot != nullptr){
         result = result + "{slot=" + slot->to_string() + "}";
+    }
+    if (polarity != nullptr){
+        result = result + "{polarity=" + getPolarityString() + "}";
     }
     return result;
 }
@@ -184,6 +192,11 @@ string AnnotatedWord::getLayerInfo(ViewLayerType viewLayerType) {
         case ViewLayerType::SLOT:
             if (slot != nullptr){
                 return slot->to_string();
+            }
+            break;
+        case ViewLayerType::POLARITY:
+            if (polarity != nullptr){
+                return getPolarityString();
             }
             break;
     }
@@ -319,6 +332,47 @@ void AnnotatedWord::setSlot(string slot) {
         this->slot = new Slot(slot);
     } else {
         this->slot = nullptr;
+    }
+}
+
+/**
+ * Returns the polarity layer of the word.
+ * @return Polarity tag of the word.
+ */
+PolarityType* AnnotatedWord::getPolarity() {
+    return polarity;
+}
+
+/**
+ * Sets the slot filling layer of the word.
+ * @param slot New slot tag of the word.
+ */
+void AnnotatedWord::setPolarity(string polarity) {
+    if (!polarity.empty()){
+        if (polarity == "positive" || polarity == "pos"){
+            this->polarity = new PolarityType(PolarityType::POSITIVE);
+        } else {
+            if (polarity == "negative" || polarity == "neg"){
+                this->polarity = new PolarityType(PolarityType::NEGATIVE);
+            } else {
+                this->polarity = new PolarityType(PolarityType::NEUTRAL);
+            }
+        }
+    } else {
+        this->polarity = nullptr;
+    }
+}
+
+string AnnotatedWord::getPolarityString() {
+    switch (*polarity){
+        case PolarityType::POSITIVE:
+            return "positive";
+        case PolarityType::NEGATIVE:
+            return "negative";
+        case PolarityType::NEUTRAL:
+            return "neutral";
+        default:
+            return "neutral";
     }
 }
 

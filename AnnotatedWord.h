@@ -13,6 +13,7 @@
 #include <FsmParse.h>
 #include <UniversalDependencyRelation.h>
 #include <FrameElement.h>
+#include <PolarityType.h>
 #include "ViewLayerType.h"
 #include "Gazetteer.h"
 #include "Slot.h"
@@ -25,6 +26,7 @@ private:
     NamedEntityType* namedEntityType = nullptr;
     Argument* argument = nullptr;
     FrameElement* frameElement = nullptr;
+    PolarityType* polarity = nullptr;
     string shallowParse;
     Slot* slot = nullptr;
     UniversalDependencyRelation* universalDependency = nullptr;
@@ -50,6 +52,9 @@ public:
     void setFrameElement(string frameElement);
     Slot* getSlot();
     void setSlot(string slot);
+    PolarityType* getPolarity();
+    string getPolarityString();
+    void setPolarity(string polarity);
     string getShallowParse();
     void setShallowParse(string parse);
     UniversalDependencyRelation* getUniversalDependency();
