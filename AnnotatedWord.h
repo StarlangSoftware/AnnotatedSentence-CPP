@@ -29,6 +29,7 @@ private:
     PolarityType* polarity = nullptr;
     string shallowParse;
     Slot* slot = nullptr;
+    string ccg;
     UniversalDependencyRelation* universalDependency = nullptr;
 public:
     ~AnnotatedWord() override;
@@ -59,6 +60,8 @@ public:
     void setShallowParse(string parse);
     UniversalDependencyRelation* getUniversalDependency();
     void setUniversalDependency(int to, string dependencyType);
+    string getCcg();
+    void setCcg(string ccg);
     void checkGazetteer(Gazetteer gazetteer);
 };
 

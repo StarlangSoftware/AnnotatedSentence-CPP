@@ -54,6 +54,10 @@ AnnotatedWord::AnnotatedWord(string word) {
                                             } else {
                                                 if (layerType == "polarity"){
                                                     setPolarity(layerValue);
+                                                } else {
+                                                    if (layerType == "ccg") {
+                                                        ccg = layerValue;
+                                                    }
                                                 }
                                             }
                                         }
@@ -123,6 +127,9 @@ string AnnotatedWord::to_string() {
     }
     if (polarity != nullptr){
         result = result + "{polarity=" + getPolarityString() + "}";
+    }
+    if (!ccg.empty()) {
+        result = result + "{ccg=" + ccg + "}";
     }
     return result;
 }
@@ -199,6 +206,8 @@ string AnnotatedWord::getLayerInfo(ViewLayerType viewLayerType) {
                 return getPolarityString();
             }
             break;
+        case ViewLayerType::CCG:
+            return ccg;
     }
     return "";
 }
@@ -407,6 +416,22 @@ UniversalDependencyRelation* AnnotatedWord::getUniversalDependency() {
  */
 void AnnotatedWord::setUniversalDependency(int to, string dependencyType) {
     this->universalDependency = new UniversalDependencyRelation(to, move(dependencyType));
+}
+
+/**
+ * Returns the CCG layer of the word.
+ * @return CCG string of the word.
+ */
+string AnnotatedWord::getCcg() {
+    return ccg;
+}
+
+/**
+ * Sets the CCG layer of the word.
+ * @param ccg New CCG of the word.
+ */
+void AnnotatedWord::setCcg(string ccg) {
+    this->ccg = ccg;
 }
 
 void AnnotatedWord::checkGazetteer(Gazetteer gazetteer) {
