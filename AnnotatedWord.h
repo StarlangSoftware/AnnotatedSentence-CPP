@@ -41,6 +41,7 @@ private:
     string shallowParse;
     Slot* slot = nullptr;
     string ccg;
+    string posTag;
     UniversalDependencyRelation* universalDependency = nullptr;
 public:
     ~AnnotatedWord() override;
@@ -73,6 +74,8 @@ public:
     void setUniversalDependency(int to, string dependencyType);
     string getCcg();
     void setCcg(string ccg);
+    string getPosTag();
+    void setPosTag(string posTag);
     void checkGazetteer(Gazetteer gazetteer);
 };
 

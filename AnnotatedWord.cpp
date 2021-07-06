@@ -57,6 +57,10 @@ AnnotatedWord::AnnotatedWord(string word) {
                                                 } else {
                                                     if (layerType == "ccg") {
                                                         ccg = layerValue;
+                                                    } else {
+                                                        if (layerType == "posTag") {
+                                                            posTag = layerValue;
+                                                        }
                                                     }
                                                 }
                                             }
@@ -130,6 +134,9 @@ string AnnotatedWord::to_string() {
     }
     if (!ccg.empty()) {
         result = result + "{ccg=" + ccg + "}";
+    }
+    if (!posTag.empty()) {
+        result = result + "{posTag=" + posTag + "}";
     }
     return result;
 }
@@ -208,6 +215,8 @@ string AnnotatedWord::getLayerInfo(ViewLayerType viewLayerType) {
             break;
         case ViewLayerType::CCG:
             return ccg;
+        case ViewLayerType::POS_TAG:
+            return posTag;
     }
     return "";
 }
@@ -432,6 +441,22 @@ string AnnotatedWord::getCcg() {
  */
 void AnnotatedWord::setCcg(string ccg) {
     this->ccg = ccg;
+}
+
+/**
+ * Returns the posTag layer of the word.
+ * @return PosTag string of the word.
+ */
+string AnnotatedWord::getPosTag() {
+    return posTag;
+}
+
+/**
+ * Sets the posTag layer of the word.
+ * @param ccg New posTag of the word.
+ */
+void AnnotatedWord::setPosTag(string posTag) {
+    this->posTag = posTag;
 }
 
 void AnnotatedWord::checkGazetteer(Gazetteer gazetteer) {
