@@ -21,8 +21,9 @@ AnnotatedWord::AnnotatedWord(string word) {
         }
         string layerType = Word::substring(layer, 0, layer.find('='));
         string layerValue = Word::substring(layer, layer.find('=') + 1);
-        if (layerType == "turkish"){
+        if (layerType == "turkish" || layerType == "english" || layerType == "persian"){
             name = layerValue;
+            language = getLanguageFromString(layerType);
         } else {
             if (layerType == "morphologicalAnalysis"){
                 parse = new MorphologicalParse(layerValue);
@@ -466,4 +467,32 @@ void AnnotatedWord::checkGazetteer(Gazetteer gazetteer) {
     if (name.find('\'') != string::npos && gazetteer.contains(name.substr(0, name.find('\''))) && parse->containsTag(MorphologicalTag::PROPERNOUN)){
         setNamedEntityType(gazetteer.getName());
     }
+}
+
+/**
+ * Converts a language string to language.
+ * @param languageString String defining the language name.
+ * @return Language corresponding to the languageString.
+ */
+Language AnnotatedWord::getLanguageFromString(string languageString) {
+    if (languageString == "turkish" || languageString == "Turkish") {
+        return Language::TURKISH;
+    } else {
+        if (languageString == "english" || languageString == "English") {
+            return Language::ENGLISH;
+        } else {
+            if (languageString == "persian" || languageString == "Persian") {
+                return Language::PERSIAN;
+            }
+        }
+    }
+    return Language::TURKISH;
+}
+
+/**
+ * Returns the language of the word.
+ * @return The language of the word.
+ */
+Language AnnotatedWord::getLanguage() {
+    return language;
 }

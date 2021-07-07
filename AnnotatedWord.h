@@ -15,6 +15,7 @@
 #include <FrameElement.h>
 #include <PolarityType.h>
 #include "ViewLayerType.h"
+#include "Language.h"
 #include "Gazetteer.h"
 #include "Slot.h"
 
@@ -42,7 +43,9 @@ private:
     Slot* slot = nullptr;
     string ccg;
     string posTag;
+    Language language;
     UniversalDependencyRelation* universalDependency = nullptr;
+    Language getLanguageFromString(string languageString);
 public:
     ~AnnotatedWord() override;
     explicit AnnotatedWord(string word);
@@ -77,6 +80,7 @@ public:
     string getPosTag();
     void setPosTag(string posTag);
     void checkGazetteer(Gazetteer gazetteer);
+    Language getLanguage();
 };
 
 

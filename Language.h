@@ -1,0 +1,12 @@
+//
+// Created by Olcay Taner YILDIZ on 7.07.2021.
+//
+
+#ifndef ANNOTATEDSENTENCE_LANGUAGE_H
+#define ANNOTATEDSENTENCE_LANGUAGE_H
+
+enum class Language{
+    TURKISH, ENGLISH, PERSIAN
+};
+
+#endif //ANNOTATEDSENTENCE_LANGUAGE_H
