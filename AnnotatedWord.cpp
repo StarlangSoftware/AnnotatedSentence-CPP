@@ -102,7 +102,18 @@ AnnotatedWord::~AnnotatedWord() {
  * @return String form of the {@link AnnotatedWord}.
  */
 string AnnotatedWord::to_string() {
-    string result = "{turkish=" + name + "}";
+    string result;
+    switch (language) {
+        case Language::TURKISH:
+            result = "{turkish=" + name + "}";
+            break;
+        case Language::ENGLISH:
+            result = "{english=" + name + "}";
+            break;
+        case Language::PERSIAN:
+            result = "{persian=" + name + "}";
+            break;
+    }
     if (parse != nullptr){
         result = result + "{morphologicalAnalysis=" + parse->to_string() + "}";
     }
