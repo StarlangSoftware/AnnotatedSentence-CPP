@@ -11,7 +11,7 @@
  * @param word Input word with annotation layers
  */
 AnnotatedWord::AnnotatedWord(string word) {
-    vector<string> splitLayers = Word::split(move(word), "[\\{\\}]");
+    vector<string> splitLayers = Word::split(word, "[\\{\\}]");
     for (const string& layer:splitLayers){
         if (layer.empty())
             continue;
