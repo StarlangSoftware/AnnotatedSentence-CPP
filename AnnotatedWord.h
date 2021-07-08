@@ -43,7 +43,7 @@ private:
     Slot* slot = nullptr;
     string ccg;
     string posTag;
-    Language language;
+    Language language = Language::TURKISH;
     UniversalDependencyRelation* universalDependency = nullptr;
     Language getLanguageFromString(string languageString);
 public:
