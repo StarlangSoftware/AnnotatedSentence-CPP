@@ -8,6 +8,7 @@
 
 #include <string>
 #include "DependencyRelation.h"
+#include "ParserEvaluationScore.h"
 #include "UniversalDependencyType.h"
 #include "UniversalDependencyPosType.h"
 
@@ -17,14 +18,15 @@ class UniversalDependencyRelation : public DependencyRelation {
 private:
     UniversalDependencyType universalDependencyType;
 public:
-    static const string universalDependencyTypes[37];
-    static const UniversalDependencyType universalDependencyTags[37];
+    static const string universalDependencyTypes[58];
+    static const UniversalDependencyType universalDependencyTags[58];
     static const string universalDependencyPosTypes[17];
     static const UniversalDependencyPosType universalDependencyPosTags[17];
     explicit UniversalDependencyRelation(int toWord);
     static UniversalDependencyType getDependencyTag(string tag);
     static UniversalDependencyPosType getDependencyPosType(string tag);
     UniversalDependencyRelation(int toWord, string dependencyType);
+    ParserEvaluationScore compareRelations(UniversalDependencyRelation* relation);
     string to_string();
     static string to_string(UniversalDependencyPosType posType);
 };

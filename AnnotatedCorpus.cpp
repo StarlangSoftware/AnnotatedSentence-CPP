@@ -107,3 +107,13 @@ RootWordStatistics AnnotatedCorpus::extractRootWordStatistics(FsmMorphologicalAn
     }
     return statistics;
 }
+
+ParserEvaluationScore AnnotatedCorpus::compareParses(AnnotatedCorpus corpus) {
+    ParserEvaluationScore result = ParserEvaluationScore();
+    for (int i = 0; i < sentences.size(); i++){
+        auto* sentence1 = (AnnotatedSentence*) sentences.at(i);
+        auto* sentence2 = (AnnotatedSentence*) corpus.getSentence(i);
+        result.add(sentence1->compareParses(sentence2));
+    }
+    return result;
+}

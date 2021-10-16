@@ -28,6 +28,7 @@ public:
     string getPredicate(int index);
     string toStems();
     void removeWord(int index);
+    ParserEvaluationScore compareParses(AnnotatedSentence* sentence);
     vector<Literal> constructLiterals(WordNet& wordNet, FsmMorphologicalAnalyzer& fsm, int wordIndex);
     vector<SynSet> constructSynSets(WordNet wordNet,FsmMorphologicalAnalyzer fsm, int wordIndex);
 };

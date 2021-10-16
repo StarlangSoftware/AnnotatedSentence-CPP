@@ -343,3 +343,15 @@ string AnnotatedSentence::toStems() {
         return "";
     }
 }
+
+ParserEvaluationScore AnnotatedSentence::compareParses(AnnotatedSentence *sentence) {
+    ParserEvaluationScore score = ParserEvaluationScore();
+    for (int i = 0; i < wordCount(); i++){
+        UniversalDependencyRelation* relation1 = ((AnnotatedWord*) words.at(i))->getUniversalDependency();
+        UniversalDependencyRelation* relation2 = ((AnnotatedWord*) sentence->getWord(i))->getUniversalDependency();
+        if (relation1 != nullptr && relation2 != nullptr){
+            score.add(relation1->compareRelations(relation2));
+        }
+    }
+    return score;
+}
