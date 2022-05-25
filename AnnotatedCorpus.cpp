@@ -80,34 +80,6 @@ TxtDictionary AnnotatedCorpus::createDictionary() {
     return dictionary;
 }
 
-RootWordStatistics AnnotatedCorpus::extractRootWordStatistics(FsmMorphologicalAnalyzer fsm) {
-    RootWordStatistics statistics = RootWordStatistics();
-    CounterHashMap<string> rootWordStatistics;
-    for (int i = 0; i < sentenceCount(); i++){
-        auto* sentence = (AnnotatedSentence*) getSentence(i);
-        for (int j = 0; j < sentence->wordCount(); j++){
-            auto* word = (AnnotatedWord*) sentence->getWord(j);
-            if (!word->getName().empty()){
-                FsmParseList parseList = fsm.morphologicalAnalysis(word->getName());
-                MorphologicalParse* parse = word->getParse();
-                if (parseList.size() > 0 && parse != nullptr){
-                    string rootWords = parseList.rootWords();
-                    if (rootWords.find('$') != string::npos){
-                        if (!statistics.containsKey(rootWords)){
-                            rootWordStatistics = CounterHashMap<string>();
-                        } else {
-                            rootWordStatistics = statistics.get(rootWords);
-                        }
-                        rootWordStatistics.put(parse->getWord()->getName());
-                        statistics.put(rootWords, rootWordStatistics);
-                    }
-                }
-            }
-        }
-    }
-    return statistics;
-}
-
 ParserEvaluationScore AnnotatedCorpus::compareParses(AnnotatedCorpus corpus) {
     ParserEvaluationScore result = ParserEvaluationScore();
     for (int i = 0; i < sentences.size(); i++){
