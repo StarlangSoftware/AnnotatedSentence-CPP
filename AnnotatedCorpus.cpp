@@ -4,6 +4,7 @@
 
 #include "AnnotatedCorpus.h"
 #include "AnnotatedSentence.h"
+using std::filesystem::directory_iterator;
 
 /**
  * A constructor of {@link AnnotatedCorpus} class which reads all {@link AnnotatedSentence} files with the file
@@ -12,19 +13,21 @@
  * @param folder Folder where all sentences reside.
  * @param fileList File list containing all sentences.
  */
-AnnotatedCorpus::AnnotatedCorpus(string folder, string fileList) {
-    ifstream corpusFile, sentenceFile;
+AnnotatedCorpus::AnnotatedCorpus(const string& folder) {
+    ifstream sentenceFile;
     string line;
-    corpusFile.open(fileList, ifstream::in);
-    while (corpusFile.good()){
-        corpusFile >> line;
-        string fileName = folder;
-        fileName += "/" + line;
-        sentenceFile.open(fileName, ifstream::in);
+    vector<string> files;
+    for (const auto & file : directory_iterator(folder)) {
+        if (!file.is_directory()) {
+            files.emplace_back(file.path());
+        }
+    }
+    sort(files.begin(), files.end());
+    for (const string& file : files) {
+        sentenceFile.open(file, ifstream::in);
         addSentence(new AnnotatedSentence(sentenceFile));
         sentenceFile.close();
     }
-    corpusFile.close();
 }
 
 /**

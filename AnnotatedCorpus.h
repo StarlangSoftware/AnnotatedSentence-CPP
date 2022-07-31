@@ -13,7 +13,7 @@ class AnnotatedCorpus : public Corpus{
 public:
     AnnotatedCorpus() = default;
     explicit AnnotatedCorpus(istream& inputFile);
-    AnnotatedCorpus(string folder, string fileList);
+    explicit AnnotatedCorpus(const string& folder);
     TxtDictionary createDictionary();
     ParserEvaluationScore compareParses(AnnotatedCorpus corpus);
 };
