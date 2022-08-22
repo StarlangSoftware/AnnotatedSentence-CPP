@@ -1,13 +1,11 @@
 cmake_minimum_required(VERSION 3.12.3)
 project(AnnotatedSentence)
-
 set(CMAKE_CXX_STANDARD 20)
 
-include_directories(include)
-link_directories(library)
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup()
 
-add_library(AnnotatedSentence ViewLayerType.h AnnotatedWord.cpp AnnotatedWord.h AnnotatedSentence.cpp AnnotatedSentence.h AnnotatedCorpus.cpp AnnotatedCorpus.h AnnotatedPhrase.cpp AnnotatedPhrase.h Language.h)
-add_executable(Test ViewLayerType.h AnnotatedWord.cpp AnnotatedWord.h AnnotatedSentence.cpp AnnotatedSentence.h AnnotatedCorpus.cpp AnnotatedCorpus.h AnnotatedPhrase.cpp AnnotatedPhrase.h Test/AnnotatedSentenceTest.cpp Language.h)
-
-target_link_libraries(AnnotatedSentence Corpus XmlParser Dictionary MorphologicalAnalysis NamedEntityRecognition Propbank WordNet MorphologicalDisambiguation DependencyParser FrameNet SentiNet)
-target_link_libraries(Test Corpus XmlParser Dictionary MorphologicalAnalysis NamedEntityRecognition Propbank WordNet DependencyParser FrameNet SentiNet)
+add_library(AnnotatedSentence src/ViewLayerType.h src/AnnotatedWord.cpp src/AnnotatedWord.h src/AnnotatedSentence.cpp src/AnnotatedSentence.h src/AnnotatedCorpus.cpp src/AnnotatedCorpus.h src/AnnotatedPhrase.cpp src/AnnotatedPhrase.h src/Language.h)
+add_executable(Test src/ViewLayerType.h src/AnnotatedWord.cpp src/AnnotatedWord.h src/AnnotatedSentence.cpp src/AnnotatedSentence.h src/AnnotatedCorpus.cpp src/AnnotatedCorpus.h src/AnnotatedPhrase.cpp src/AnnotatedPhrase.h Test/AnnotatedSentenceTest.cpp src/Language.h)
+target_link_libraries(AnnotatedSentence ${CONAN_LIBS})
+target_link_libraries(Test ${CONAN_LIBS})

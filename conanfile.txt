@@ -1,0 +1,10 @@
+[requires]
+WordNet/1.0.0
+DependencyParser/1.0.0
+FrameNet/1.0.0
+NamedEntityRecognition/1.0.0
+PropBank/1.0.0
+SentiNet/1.0.0
+
+[generators]
+cmake
