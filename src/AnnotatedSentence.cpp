@@ -26,8 +26,8 @@ AnnotatedSentence::AnnotatedSentence(istream &inputFile) {
  * Converts a simple sentence to an annotated sentence
  * @param sentence Simple sentence
  */
-AnnotatedSentence::AnnotatedSentence(string sentence) {
-    vector<string> wordArray = Word::split(move(sentence));
+AnnotatedSentence::AnnotatedSentence(const string& sentence) {
+    vector<string> wordArray = Word::split(sentence);
     for (auto const& word : wordArray){
         if (!word.empty()){
             words.emplace_back(new AnnotatedWord(word));
@@ -40,7 +40,7 @@ AnnotatedSentence::AnnotatedSentence(string sentence) {
  * PREDICATE tag.
  * @return True if at least one of the words is annotated with PREDICATE tag; false otherwise.
  */
-bool AnnotatedSentence::containsPredicate() {
+bool AnnotatedSentence::containsPredicate() const{
     for (Word* word : words){
         auto* annotatedWord = (AnnotatedWord*) word;
         if (annotatedWord->getArgument() != nullptr && annotatedWord->getArgument()->getArgumentType() == "PREDICATE"){
@@ -55,7 +55,7 @@ bool AnnotatedSentence::containsPredicate() {
  * PREDICATE tag.
  * @return True if at least one of the words is annotated with PREDICATE tag; false otherwise.
  */
-bool AnnotatedSentence::containsFramePredicate() {
+bool AnnotatedSentence::containsFramePredicate() const{
     for (Word* word : words){
         auto* annotatedWord = (AnnotatedWord*) word;
         if (annotatedWord->getFrameElement() != nullptr && annotatedWord->getFrameElement()->getFrameElementType() == "PREDICATE"){
@@ -65,7 +65,7 @@ bool AnnotatedSentence::containsFramePredicate() {
     return false;
 }
 
-bool AnnotatedSentence::updateConnectedPredicate(string previousId, string currentId) {
+bool AnnotatedSentence::updateConnectedPredicate(const string& previousId, const string& currentId) {
     bool modified = false;
     for (Word* word : words){
         auto* annotatedWord = (AnnotatedWord*) word;
@@ -73,7 +73,7 @@ bool AnnotatedSentence::updateConnectedPredicate(string previousId, string curre
             annotatedWord->setArgument(annotatedWord->getArgument()->getArgumentType() + "$" + currentId);
             modified = true;
         }
-        if (annotatedWord->getFrameElement() != nullptr && annotatedWord->getFrameElement()->getId() != "" && annotatedWord->getFrameElement()->getId() == previousId){
+        if (annotatedWord->getFrameElement() != nullptr && !annotatedWord->getFrameElement()->getId().empty() && annotatedWord->getFrameElement()->getId() == previousId){
             annotatedWord->setFrameElement(annotatedWord->getFrameElement()->getFrameElementType() + "$" + annotatedWord->getFrameElement()->getFrame() + "$" + currentId);
             modified = true;
         }
@@ -85,7 +85,7 @@ bool AnnotatedSentence::updateConnectedPredicate(string previousId, string curre
  * The method constructs all possible shallow parse groups of a sentence.
  * @return Shallow parse groups of a sentence.
  */
-vector<AnnotatedPhrase *> AnnotatedSentence::getShallowParseGroups() {
+vector<AnnotatedPhrase *> AnnotatedSentence::getShallowParseGroups() const{
     vector<AnnotatedPhrase *> result;
     AnnotatedWord* previousWord = nullptr;
     AnnotatedPhrase* current = nullptr;
@@ -114,7 +114,7 @@ vector<AnnotatedPhrase *> AnnotatedSentence::getShallowParseGroups() {
  * @param framesetList Frameset list that contains all frames for Turkish
  * @return An array of words, which are verbs, semantic tags assigned, and framesetlist assigned for that tag.
  */
-vector<AnnotatedWord *> AnnotatedSentence::predicateCandidates(FramesetList& framesetList) {
+vector<AnnotatedWord *> AnnotatedSentence::predicateCandidates(FramesetList& framesetList) const{
     vector<AnnotatedWord*> candidateList;
     for (Word* word : words){
         auto* annotatedWord = (AnnotatedWord*) word;
@@ -142,7 +142,7 @@ vector<AnnotatedWord *> AnnotatedSentence::predicateCandidates(FramesetList& fra
  * @param framesetList Frameset list that contains all frames for Turkish
  * @return An array of words, which are verbs, semantic tags assigned, and framesetlist assigned for that tag.
  */
-vector<AnnotatedWord *> AnnotatedSentence::predicateFrameCandidates(FrameNet& frameNet) {
+vector<AnnotatedWord *> AnnotatedSentence::predicateFrameCandidates(FrameNet& frameNet) const{
     vector<AnnotatedWord*> candidateList;
     for (Word* word : words){
         auto* annotatedWord = (AnnotatedWord*) word;
@@ -167,7 +167,7 @@ vector<AnnotatedWord *> AnnotatedSentence::predicateFrameCandidates(FrameNet& fr
  * @param index Predicate index
  * @return The predicate with index index in the sentence.
  */
-string AnnotatedSentence::getPredicate(int index) {
+string AnnotatedSentence::getPredicate(int index) const{
     int count1  = 0, count2 = 0;
     string data;
     vector<AnnotatedWord*> word;
@@ -253,7 +253,7 @@ vector<Literal> AnnotatedSentence::constructLiterals(WordNet& wordNet, FsmMorpho
  * @param wordIndex Word index
  * @return List of synset candidates containing all possible root forms and multiword expressions.
  */
-vector<SynSet> AnnotatedSentence::constructSynSets(WordNet wordNet, FsmMorphologicalAnalyzer fsm, int wordIndex) {
+vector<SynSet> AnnotatedSentence::constructSynSets(WordNet wordNet, FsmMorphologicalAnalyzer& fsm, int wordIndex) {
     auto* word = (AnnotatedWord*) getWord(wordIndex);
     vector<SynSet> possibleSynSets;
     MorphologicalParse* morphologicalParse = word->getParse();
@@ -293,7 +293,7 @@ vector<SynSet> AnnotatedSentence::constructSynSets(WordNet wordNet, FsmMorpholog
     }
     if (firstPrecedingWord != nullptr) {
         if (secondPrecedingWord != nullptr) {
-            vector<SynSet> added = wordNet.constructIdiomSynSets(*(secondPrecedingWord->getParse()), *(firstPrecedingWord->getParse()), *(word->getParse()), *(secondPrecedingWord->getMetamorphicParse()), *(firstPrecedingWord->getMetamorphicParse()), *(word->getMetamorphicParse()), fsm);
+            added = wordNet.constructIdiomSynSets(*(secondPrecedingWord->getParse()), *(firstPrecedingWord->getParse()), *(word->getParse()), *(secondPrecedingWord->getMetamorphicParse()), *(firstPrecedingWord->getMetamorphicParse()), *(word->getMetamorphicParse()), fsm);
             possibleSynSets.insert(possibleSynSets.end(), added.begin(), added.end());
         }
         added = wordNet.constructIdiomSynSets(*(firstPrecedingWord->getParse()), *(word->getParse()), *(firstPrecedingWord->getMetamorphicParse()), *(word->getMetamorphicParse()), fsm);
@@ -320,7 +320,7 @@ vector<SynSet> AnnotatedSentence::constructSynSets(WordNet wordNet, FsmMorpholog
  *
  * @return String result which has all the stems of each item in words {@link ArrayList}.
  */
-string AnnotatedSentence::toStems() {
+string AnnotatedSentence::toStems() const{
     string result;
     AnnotatedWord* annotatedWord;
     if (!words.empty()) {
@@ -344,7 +344,7 @@ string AnnotatedSentence::toStems() {
     }
 }
 
-ParserEvaluationScore AnnotatedSentence::compareParses(AnnotatedSentence *sentence) {
+ParserEvaluationScore AnnotatedSentence::compareParses(AnnotatedSentence *sentence) const{
     ParserEvaluationScore score = ParserEvaluationScore();
     for (int i = 0; i < wordCount(); i++){
         UniversalDependencyRelation* relation1 = ((AnnotatedWord*) words.at(i))->getUniversalDependency();

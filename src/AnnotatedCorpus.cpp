@@ -48,7 +48,7 @@ AnnotatedCorpus::AnnotatedCorpus(istream &inputFile) {
   * Creates a dictionary from the morphologically annotated words.
   * @return A dictionary containing root forms of the morphological annotations of words.
   */
-TxtDictionary AnnotatedCorpus::createDictionary() {
+TxtDictionary AnnotatedCorpus::createDictionary() const{
     TxtDictionary dictionary = TxtDictionary();
     for (int i = 0; i < sentenceCount(); i++){
         auto* sentence = (AnnotatedSentence*) getSentence(i);
@@ -83,7 +83,7 @@ TxtDictionary AnnotatedCorpus::createDictionary() {
     return dictionary;
 }
 
-ParserEvaluationScore AnnotatedCorpus::compareParses(AnnotatedCorpus corpus) {
+ParserEvaluationScore AnnotatedCorpus::compareParses(const AnnotatedCorpus& corpus) {
     ParserEvaluationScore result = ParserEvaluationScore();
     for (int i = 0; i < sentences.size(); i++){
         auto* sentence1 = (AnnotatedSentence*) sentences.at(i);

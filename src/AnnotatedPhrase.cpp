@@ -10,16 +10,16 @@
  * @param wordIndex Starting index of the first word in the phrase w.r.t. original sentence the phrase occurs.
  * @param tag Tag of the phrase. Corresponds to the shallow parse or named entity tag.
  */
-AnnotatedPhrase::AnnotatedPhrase(int wordIndex, string tag) {
+AnnotatedPhrase::AnnotatedPhrase(int wordIndex, const string& tag) {
     this->wordIndex = wordIndex;
-    this->tag = move(tag);
+    this->tag = tag;
 }
 
 /**
  * Accessor for the wordIndex attribute.
  * @return Starting index of the first word in the phrase w.r.t. original sentence the phrase occurs.
  */
-int AnnotatedPhrase::getWordIndex() {
+int AnnotatedPhrase::getWordIndex() const{
     return this->wordIndex;
 }
 
@@ -27,6 +27,6 @@ int AnnotatedPhrase::getWordIndex() {
  * Accessor for the tag attribute.
  * @return Tag of the phrase. Corresponds to the shallow parse or named entity tag.
  */
-string AnnotatedPhrase::getTag() {
+string AnnotatedPhrase::getTag() const{
     return this->tag;
 }

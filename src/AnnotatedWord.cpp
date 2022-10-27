@@ -10,7 +10,7 @@
  * corresponding layers.
  * @param word Input word with annotation layers
  */
-AnnotatedWord::AnnotatedWord(string word) {
+AnnotatedWord::AnnotatedWord(const string& word) {
     vector<string> splitLayers = Word::split(word, "[\\{\\}]");
     for (const string& layer:splitLayers){
         if (layer.empty())
@@ -44,7 +44,7 @@ AnnotatedWord::AnnotatedWord(string word) {
                                     shallowParse = layerValue;
                                 } else {
                                     if (layerType == "universalDependency"){
-                                        vector<string> values = Word::split(move(layerValue), "\\$");
+                                        vector<string> values = Word::split(layerValue, "\\$");
                                         universalDependency = new UniversalDependencyRelation(std::stoi(values.at(0)), values.at(1));
                                     } else {
                                         if (layerType == "framenet" || layerType == "frameNet"){
@@ -82,18 +82,8 @@ AnnotatedWord::AnnotatedWord(string word) {
  * @param name Lemma of the word.
  * @param namedEntityType Named entity of the word.
  */
-AnnotatedWord::AnnotatedWord(string name, NamedEntityType* namedEntityType) : Word(move(name)) {
+AnnotatedWord::AnnotatedWord(const string& name, NamedEntityType* namedEntityType) : Word(name) {
     this->namedEntityType = namedEntityType;
-}
-
-AnnotatedWord::~AnnotatedWord() {
-    delete namedEntityType;
-    delete parse;
-    delete metamorphicParse;
-    delete argument;
-    delete universalDependency;
-    delete frameElement;
-    delete polarity;
 }
 
 /**
@@ -101,7 +91,7 @@ AnnotatedWord::~AnnotatedWord() {
  * equal sign and layer value finishing with right brace.
  * @return String form of the {@link AnnotatedWord}.
  */
-string AnnotatedWord::to_string() {
+string AnnotatedWord::to_string() const{
     string result;
     switch (language) {
         case Language::TURKISH:
@@ -158,7 +148,7 @@ string AnnotatedWord::to_string() {
  * @param name Lemma of the word.
  * @param parse Morphological parse of the word.
  */
-AnnotatedWord::AnnotatedWord(string name, MorphologicalParse *parse) : Word(move(name)) {
+AnnotatedWord::AnnotatedWord(const string& name, MorphologicalParse *parse) : Word(name) {
     this->parse = parse;
 }
 
@@ -167,7 +157,7 @@ AnnotatedWord::AnnotatedWord(string name, MorphologicalParse *parse) : Word(move
  * @param name Lemma of the word.
  * @param parse Morphological parse of the word.
  */
-AnnotatedWord::AnnotatedWord(string name, FsmParse *parse) : Word(move(name)){
+AnnotatedWord::AnnotatedWord(const string& name, FsmParse *parse) : Word(name){
     this->parse = parse;
     setMetamorphicParse(parse->getWithList());
 }
@@ -177,7 +167,7 @@ AnnotatedWord::AnnotatedWord(string name, FsmParse *parse) : Word(move(name)){
  * @param viewLayerType Layer for which the value questioned.
  * @return The value of the given layer.
  */
-string AnnotatedWord::getLayerInfo(ViewLayerType viewLayerType) {
+string AnnotatedWord::getLayerInfo(ViewLayerType viewLayerType) const{
     switch (viewLayerType){
         case ViewLayerType::INFLECTIONAL_GROUP:
             if (parse != nullptr){
@@ -237,7 +227,7 @@ string AnnotatedWord::getLayerInfo(ViewLayerType viewLayerType) {
  * Returns the morphological parse layer of the word.
  * @return The morphological parse of the word.
  */
-MorphologicalParse *AnnotatedWord::getParse() {
+MorphologicalParse *AnnotatedWord::getParse() const{
     return parse;
 }
 
@@ -245,7 +235,7 @@ MorphologicalParse *AnnotatedWord::getParse() {
  * Sets the morphological parse layer of the word.
  * @param parseString The new morphological parse of the word in string form.
  */
-void AnnotatedWord::setParse(string parseString) {
+void AnnotatedWord::setParse(const string& parseString) {
     if (!parseString.empty()){
         parse = new MorphologicalParse(parseString);
     } else {
@@ -257,7 +247,7 @@ void AnnotatedWord::setParse(string parseString) {
  * Returns the metamorphic parse layer of the word.
  * @return The metamorphic parse of the word.
  */
-MetamorphicParse *AnnotatedWord::getMetamorphicParse() {
+MetamorphicParse *AnnotatedWord::getMetamorphicParse() const{
     return metamorphicParse;
 }
 
@@ -265,31 +255,31 @@ MetamorphicParse *AnnotatedWord::getMetamorphicParse() {
  * Sets the metamorphic parse layer of the word.
  * @param parseString The new metamorphic parse of the word in string form.
  */
-void AnnotatedWord::setMetamorphicParse(string parseString) {
-    metamorphicParse = new MetamorphicParse(move(parseString));
+void AnnotatedWord::setMetamorphicParse(const string& parseString) {
+    metamorphicParse = new MetamorphicParse(parseString);
 }
 
 /**
  * Returns the semantic layer of the word.
  * @return Sense id of the word.
  */
-string AnnotatedWord::getSemantic() {
+string AnnotatedWord::getSemantic() const{
     return semantic;
 }
 
 /**
- * Sets the semantic layer of the word.
- * @param semantic New sense id of the word.
+ * Sets the _semantic layer of the word.
+ * @param _semantic New sense id of the word.
  */
-void AnnotatedWord::setSemantic(string semantic) {
-    this->semantic = move(semantic);
+void AnnotatedWord::setSemantic(const string& _semantic) {
+    this->semantic = _semantic;
 }
 
 /**
  * Returns the named entity layer of the word.
  * @return Named entity tag of the word.
  */
-NamedEntityType *AnnotatedWord::getNamedEntity() {
+NamedEntityType *AnnotatedWord::getNamedEntity() const{
     return namedEntityType;
 }
 
@@ -297,7 +287,7 @@ NamedEntityType *AnnotatedWord::getNamedEntity() {
  * Sets the named entity layer of the word.
  * @param namedEntity New named entity tag of the word.
  */
-void AnnotatedWord::setNamedEntityType(string namedEntity) {
+void AnnotatedWord::setNamedEntityType(const string& namedEntity) {
     if (!namedEntity.empty()){
         namedEntityType = new NamedEntityType(getNamedEntityType(namedEntity));
     } else {
@@ -309,17 +299,17 @@ void AnnotatedWord::setNamedEntityType(string namedEntity) {
  * Returns the semantic role layer of the word.
  * @return Semantic role tag of the word.
  */
-Argument *AnnotatedWord::getArgument() {
+Argument *AnnotatedWord::getArgument() const{
     return argument;
 }
 
 /**
  * Sets the semantic role layer of the word.
- * @param argument New semantic role tag of the word.
+ * @param _argument New semantic role tag of the word.
  */
-void AnnotatedWord::setArgument(string argument) {
-    if (!argument.empty()){
-        this->argument = new Argument(argument);
+void AnnotatedWord::setArgument(const string& _argument) {
+    if (!_argument.empty()){
+        this->argument = new Argument(_argument);
     } else {
         this->argument = nullptr;
     }
@@ -329,7 +319,7 @@ void AnnotatedWord::setArgument(string argument) {
  * Returns the framenet layer of the word.
  * @return Framenet tag of the word.
  */
-FrameElement *AnnotatedWord::getFrameElement() {
+FrameElement *AnnotatedWord::getFrameElement() const{
     return frameElement;
 }
 
@@ -337,9 +327,9 @@ FrameElement *AnnotatedWord::getFrameElement() {
  * Sets the framenet layer of the word.
  * @param argument New framenet tag of the word.
  */
-void AnnotatedWord::setFrameElement(string frameElement) {
-    if (!frameElement.empty()){
-        this->frameElement = new FrameElement(frameElement);
+void AnnotatedWord::setFrameElement(const string& _frameElement) {
+    if (!_frameElement.empty()){
+        this->frameElement = new FrameElement(_frameElement);
     } else {
         this->frameElement = nullptr;
     }
@@ -349,17 +339,17 @@ void AnnotatedWord::setFrameElement(string frameElement) {
  * Returns the slot filling layer of the word.
  * @return Slot tag of the word.
  */
-Slot *AnnotatedWord::getSlot() {
+Slot *AnnotatedWord::getSlot() const{
     return slot;
 }
 
 /**
- * Sets the slot filling layer of the word.
- * @param slot New slot tag of the word.
+ * Sets the _slot filling layer of the word.
+ * @param _slot New _slot tag of the word.
  */
-void AnnotatedWord::setSlot(string slot) {
-    if (!slot.empty()){
-        this->slot = new Slot(slot);
+void AnnotatedWord::setSlot(const string& _slot) {
+    if (!_slot.empty()){
+        this->slot = new Slot(_slot);
     } else {
         this->slot = nullptr;
     }
@@ -369,7 +359,7 @@ void AnnotatedWord::setSlot(string slot) {
  * Returns the polarity layer of the word.
  * @return Polarity tag of the word.
  */
-PolarityType* AnnotatedWord::getPolarity() {
+PolarityType* AnnotatedWord::getPolarity() const{
     return polarity;
 }
 
@@ -377,12 +367,12 @@ PolarityType* AnnotatedWord::getPolarity() {
  * Sets the slot filling layer of the word.
  * @param slot New slot tag of the word.
  */
-void AnnotatedWord::setPolarity(string polarity) {
-    if (!polarity.empty()){
-        if (polarity == "positive" || polarity == "pos"){
+void AnnotatedWord::setPolarity(const string& _polarity) {
+    if (!_polarity.empty()){
+        if (_polarity == "positive" || _polarity == "pos"){
             this->polarity = new PolarityType(PolarityType::POSITIVE);
         } else {
-            if (polarity == "negative" || polarity == "neg"){
+            if (_polarity == "negative" || _polarity == "neg"){
                 this->polarity = new PolarityType(PolarityType::NEGATIVE);
             } else {
                 this->polarity = new PolarityType(PolarityType::NEUTRAL);
@@ -393,7 +383,7 @@ void AnnotatedWord::setPolarity(string polarity) {
     }
 }
 
-string AnnotatedWord::getPolarityString() {
+string AnnotatedWord::getPolarityString() const{
     switch (*polarity){
         case PolarityType::POSITIVE:
             return "positive";
@@ -410,23 +400,23 @@ string AnnotatedWord::getPolarityString() {
  * Returns the shallow parse layer of the word.
  * @return Shallow parse tag of the word.
  */
-string AnnotatedWord::getShallowParse() {
+string AnnotatedWord::getShallowParse() const{
     return shallowParse;
 }
 
 /**
- * Sets the shallow parse layer of the word.
- * @param parse New shallow parse tag of the word.
+ * Sets the shallow _parse layer of the word.
+ * @param _parse New shallow _parse tag of the word.
  */
-void AnnotatedWord::setShallowParse(string parse) {
-    this->shallowParse = move(parse);
+void AnnotatedWord::setShallowParse(const string& _parse) {
+    this->shallowParse = _parse;
 }
 
 /**
  * Returns the universal dependency layer of the word.
  * @return Universal dependency relation of the word.
  */
-UniversalDependencyRelation* AnnotatedWord::getUniversalDependency() {
+UniversalDependencyRelation* AnnotatedWord::getUniversalDependency() const{
     return universalDependency;
 }
 
@@ -435,43 +425,43 @@ UniversalDependencyRelation* AnnotatedWord::getUniversalDependency() {
  * @param to Word related to.
  * @param dependencyType type of dependency the word is related to.
  */
-void AnnotatedWord::setUniversalDependency(int to, string dependencyType) {
-    this->universalDependency = new UniversalDependencyRelation(to, move(dependencyType));
+void AnnotatedWord::setUniversalDependency(int to, const string& dependencyType) {
+    this->universalDependency = new UniversalDependencyRelation(to, dependencyType);
 }
 
 /**
  * Returns the CCG layer of the word.
  * @return CCG string of the word.
  */
-string AnnotatedWord::getCcg() {
+string AnnotatedWord::getCcg() const{
     return ccg;
 }
 
 /**
  * Sets the CCG layer of the word.
- * @param ccg New CCG of the word.
+ * @param _ccg New CCG of the word.
  */
-void AnnotatedWord::setCcg(string ccg) {
-    this->ccg = ccg;
+void AnnotatedWord::setCcg(const string& _ccg) {
+    this->ccg = _ccg;
 }
 
 /**
  * Returns the posTag layer of the word.
  * @return PosTag string of the word.
  */
-string AnnotatedWord::getPosTag() {
+string AnnotatedWord::getPosTag() const{
     return posTag;
 }
 
 /**
- * Sets the posTag layer of the word.
- * @param ccg New posTag of the word.
+ * Sets the _posTag layer of the word.
+ * @param ccg New _posTag of the word.
  */
-void AnnotatedWord::setPosTag(string posTag) {
-    this->posTag = posTag;
+void AnnotatedWord::setPosTag(const string& _posTag) {
+    this->posTag = _posTag;
 }
 
-void AnnotatedWord::checkGazetteer(Gazetteer gazetteer) {
+void AnnotatedWord::checkGazetteer(Gazetteer gazetteer){
     if (gazetteer.contains(name) && parse->containsTag(MorphologicalTag::PROPERNOUN)){
         setNamedEntityType(gazetteer.getName());
     }
@@ -485,7 +475,7 @@ void AnnotatedWord::checkGazetteer(Gazetteer gazetteer) {
  * @param languageString String defining the language name.
  * @return Language corresponding to the languageString.
  */
-Language AnnotatedWord::getLanguageFromString(string languageString) {
+Language AnnotatedWord::getLanguageFromString(const string& languageString) const{
     if (languageString == "turkish" || languageString == "Turkish") {
         return Language::TURKISH;
     } else {
@@ -504,6 +494,6 @@ Language AnnotatedWord::getLanguageFromString(string languageString) {
  * Returns the language of the word.
  * @return The language of the word.
  */
-Language AnnotatedWord::getLanguage() {
+Language AnnotatedWord::getLanguage() const{
     return language;
 }

@@ -13,9 +13,9 @@ private:
     int wordIndex;
     string tag;
 public:
-    AnnotatedPhrase(int wordIndex, string tag);
-    int getWordIndex();
-    string getTag();
+    AnnotatedPhrase(int wordIndex, const string& tag);
+    int getWordIndex() const;
+    string getTag() const;
 };
 
 

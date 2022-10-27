@@ -18,19 +18,19 @@ class AnnotatedSentence : public Sentence {
 public:
     AnnotatedSentence() = default;
     explicit AnnotatedSentence(istream& inputFile);
-    explicit AnnotatedSentence(string sentence);
-    bool containsPredicate();
-    bool containsFramePredicate();
-    bool updateConnectedPredicate(string previousId, string currentId);
-    vector<AnnotatedWord*> predicateCandidates(FramesetList& framesetList);
-    vector<AnnotatedWord *> predicateFrameCandidates(FrameNet& frameNet);
-    vector<AnnotatedPhrase*> getShallowParseGroups();
-    string getPredicate(int index);
-    string toStems();
+    explicit AnnotatedSentence(const string& sentence);
+    bool containsPredicate() const;
+    bool containsFramePredicate() const;
+    bool updateConnectedPredicate(const string& previousId, const string& currentId);
+    vector<AnnotatedWord*> predicateCandidates(FramesetList& framesetList) const;
+    vector<AnnotatedWord *> predicateFrameCandidates(FrameNet& frameNet) const;
+    vector<AnnotatedPhrase*> getShallowParseGroups() const;
+    string getPredicate(int index) const;
+    string toStems() const;
     void removeWord(int index);
-    ParserEvaluationScore compareParses(AnnotatedSentence* sentence);
+    ParserEvaluationScore compareParses(AnnotatedSentence* sentence) const;
     vector<Literal> constructLiterals(WordNet& wordNet, FsmMorphologicalAnalyzer& fsm, int wordIndex);
-    vector<SynSet> constructSynSets(WordNet wordNet,FsmMorphologicalAnalyzer fsm, int wordIndex);
+    vector<SynSet> constructSynSets(WordNet wordNet, FsmMorphologicalAnalyzer& fsm, int wordIndex);
 };
 
 
