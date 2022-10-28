@@ -253,7 +253,7 @@ vector<Literal> AnnotatedSentence::constructLiterals(WordNet& wordNet, FsmMorpho
  * @param wordIndex Word index
  * @return List of synset candidates containing all possible root forms and multiword expressions.
  */
-vector<SynSet> AnnotatedSentence::constructSynSets(WordNet wordNet, FsmMorphologicalAnalyzer& fsm, int wordIndex) {
+vector<SynSet> AnnotatedSentence::constructSynSets(WordNet& wordNet, FsmMorphologicalAnalyzer& fsm, int wordIndex) {
     auto* word = (AnnotatedWord*) getWord(wordIndex);
     vector<SynSet> possibleSynSets;
     MorphologicalParse* morphologicalParse = word->getParse();

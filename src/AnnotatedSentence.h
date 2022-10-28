@@ -30,7 +30,7 @@ public:
     void removeWord(int index);
     ParserEvaluationScore compareParses(AnnotatedSentence* sentence) const;
     vector<Literal> constructLiterals(WordNet& wordNet, FsmMorphologicalAnalyzer& fsm, int wordIndex);
-    vector<SynSet> constructSynSets(WordNet wordNet, FsmMorphologicalAnalyzer& fsm, int wordIndex);
+    vector<SynSet> constructSynSets(WordNet& wordNet, FsmMorphologicalAnalyzer& fsm, int wordIndex);
 };
 
 
