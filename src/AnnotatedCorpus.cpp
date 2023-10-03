@@ -7,7 +7,7 @@
 using std::filesystem::directory_iterator;
 
 /**
- * A constructor of {@link AnnotatedCorpus} class which reads all {@link AnnotatedSentence} files with the file
+ * A constructor of AnnotatedCorpus class which reads all AnnotatedSentence files with the file
  * name satisfying the given pattern inside the given folder. For each file inside that folder, the constructor
  * creates an AnnotatedSentence and puts in inside the list parseTrees.
  * @param folder Folder where all sentences reside.
@@ -31,7 +31,7 @@ AnnotatedCorpus::AnnotatedCorpus(const string& folder) {
 }
 
 /**
- * An obsolete constructor of the {@link AnnotatedSentence} class. If the contents of all the sentences are inside
+ * An obsolete constructor of the AnnotatedSentence class. If the contents of all the sentences are inside
  * a single file, this constructor can be called. Each line in this file corresponds to a single AnnotatedSentence.
  * @param inputFile File containing the sentences.
  */

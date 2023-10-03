@@ -6,7 +6,7 @@
 #include "NamedEntityType.h"
 
 /**
- * Constructor for the {@link AnnotatedWord} class. Gets the word with its annotation layers as input and sets the
+ * Constructor for the AnnotatedWord class. Gets the word with its annotation layers as input and sets the
  * corresponding layers.
  * @param word Input word with annotation layers
  */
@@ -78,7 +78,7 @@ AnnotatedWord::AnnotatedWord(const string& word) {
 }
 
 /**
- * Another constructor for {@link AnnotatedWord}. Gets the word and a namedEntityType and sets two layers.
+ * Another constructor for AnnotatedWord. Gets the word and a namedEntityType and sets two layers.
  * @param name Lemma of the word.
  * @param namedEntityType Named entity of the word.
  */
@@ -87,9 +87,9 @@ AnnotatedWord::AnnotatedWord(const string& name, NamedEntityType* namedEntityTyp
 }
 
 /**
- * Converts an {@link AnnotatedWord} to string. For each annotation layer, the method puts a left brace, layer name,
+ * Converts an AnnotatedWord to string. For each annotation layer, the method puts a left brace, layer name,
  * equal sign and layer value finishing with right brace.
- * @return String form of the {@link AnnotatedWord}.
+ * @return String form of the AnnotatedWord.
  */
 string AnnotatedWord::to_string() const{
     string result;
@@ -144,7 +144,7 @@ string AnnotatedWord::to_string() const{
 }
 
 /**
- * Another constructor for {@link AnnotatedWord}. Gets the word and morphological parse and sets two layers.
+ * Another constructor for AnnotatedWord. Gets the word and morphological parse and sets two layers.
  * @param name Lemma of the word.
  * @param parse Morphological parse of the word.
  */
@@ -153,7 +153,7 @@ AnnotatedWord::AnnotatedWord(const string& name, MorphologicalParse *parse) : Wo
 }
 
 /**
- * Another constructor for {@link AnnotatedWord}. Gets the word and morphological parse and sets two layers.
+ * Another constructor for AnnotatedWord. Gets the word and morphological parse and sets two layers.
  * @param name Lemma of the word.
  * @param parse Morphological parse of the word.
  */

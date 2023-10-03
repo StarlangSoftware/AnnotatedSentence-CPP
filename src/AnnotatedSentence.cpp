@@ -315,10 +315,10 @@ vector<SynSet> AnnotatedSentence::constructSynSets(WordNet& wordNet, FsmMorpholo
 }
 
 /**
- * The toStems method returns an accumulated string of each word's stems in words {@link ArrayList}.
+ * The toStems method returns an accumulated string of each word's stems in words ArrayList.
  * If the parse of the word does not exist, the method adds the surfaceform to the resulting string.
  *
- * @return String result which has all the stems of each item in words {@link ArrayList}.
+ * @return String result which has all the stems of each item in words ArrayList.
  */
 string AnnotatedSentence::toStems() const{
     string result;
