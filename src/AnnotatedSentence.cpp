@@ -65,6 +65,13 @@ bool AnnotatedSentence::containsFramePredicate() const{
     return false;
 }
 
+/**
+ * Replaces id's of predicates, which have previousId as synset id, with currentId. Replaces also predicate id's of
+ * frame elements, which have predicate id's previousId, with currentId.
+ * @param previousId Previous id of the synset.
+ * @param currentId Replacement id.
+ * @return Returns true, if any replacement has been done; false otherwise.
+ */
 bool AnnotatedSentence::updateConnectedPredicate(const string& previousId, const string& currentId) {
     bool modified = false;
     for (Word* word : words){
@@ -344,6 +351,12 @@ string AnnotatedSentence::toStems() const{
     }
 }
 
+/**
+ * Compares the sentence with the given sentence and returns a parser evaluation score for this comparison. The result
+ * is calculated by summing up the parser evaluation scores of word by word dpendency relation comparisons.
+ * @param sentence Sentence to be compared.
+ * @return A parser evaluation score object.
+ */
 ParserEvaluationScore AnnotatedSentence::compareParses(AnnotatedSentence *sentence) const{
     ParserEvaluationScore score = ParserEvaluationScore();
     for (int i = 0; i < wordCount(); i++){

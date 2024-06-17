@@ -83,6 +83,12 @@ TxtDictionary AnnotatedCorpus::createDictionary() const{
     return dictionary;
 }
 
+/**
+ * Compares the corpus with the given corpus and returns a parser evaluation score for this comparison. The result
+ * is calculated by summing up the parser evaluation scores of sentence by sentence dependency relation comparisons.
+ * @param corpus Corpus to be compared.
+ * @return A parser evaluation score object.
+ */
 ParserEvaluationScore AnnotatedCorpus::compareParses(const AnnotatedCorpus& corpus) {
     ParserEvaluationScore result = ParserEvaluationScore();
     for (int i = 0; i < sentences.size(); i++){

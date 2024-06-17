@@ -383,6 +383,10 @@ void AnnotatedWord::setPolarity(const string& _polarity) {
     }
 }
 
+/**
+ * Returns the polarity layer of the word.
+ * @return Polarity string of the word.
+ */
 string AnnotatedWord::getPolarityString() const{
     switch (*polarity){
         case PolarityType::POSITIVE:
@@ -461,6 +465,10 @@ void AnnotatedWord::setPosTag(const string& _posTag) {
     this->posTag = _posTag;
 }
 
+/**
+ * Checks the gazetteer and sets the named entity tag accordingly.
+ * @param gazetteer Gazetteer used to set named entity tag.
+ */
 void AnnotatedWord::checkGazetteer(Gazetteer gazetteer){
     if (gazetteer.contains(name) && parse->containsTag(MorphologicalTag::PROPERNOUN)){
         setNamedEntityType(gazetteer.getName());
