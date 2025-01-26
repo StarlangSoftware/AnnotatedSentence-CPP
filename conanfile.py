@@ -18,7 +18,8 @@ class AnnotatedSentenceConan(ConanFile):
                 "corpus/1.0.0",
                 "morphological_analysis/1.0.0",
                 "xml_parser/1.0.0",
-                "data_structure/1.0.0"]
+                "data_structure/1.0.0",
+                "util/1.0.0"]
     license = "GPL License"
     author = "Olcay Taner Yildiz olcay.yildiz@ozyegin.edu.tr"
     url = "https://github.com/StarlangSoftware/AnnotatedSentence-CPP"

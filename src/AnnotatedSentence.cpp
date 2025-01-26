@@ -6,6 +6,7 @@
 #include "AnnotatedWord.h"
 #include <istream>
 #include <FrameNet.h>
+#include <StringUtils.h>
 
 /**
  * Reads an annotated sentence from a text file.
@@ -14,7 +15,7 @@
 AnnotatedSentence::AnnotatedSentence(istream &inputFile) {
     string line;
     getline(inputFile, line);
-    vector<string> wordArray = Word::split(line);
+    vector<string> wordArray = StringUtils::split(line);
     for (auto const& word : wordArray){
         if (!word.empty()){
             words.emplace_back(new AnnotatedWord(word));
@@ -27,7 +28,7 @@ AnnotatedSentence::AnnotatedSentence(istream &inputFile) {
  * @param sentence Simple sentence
  */
 AnnotatedSentence::AnnotatedSentence(const string& sentence) {
-    vector<string> wordArray = Word::split(sentence);
+    vector<string> wordArray = StringUtils::split(sentence);
     for (auto const& word : wordArray){
         if (!word.empty()){
             words.emplace_back(new AnnotatedWord(word));
@@ -43,8 +44,10 @@ AnnotatedSentence::AnnotatedSentence(const string& sentence) {
 bool AnnotatedSentence::containsPredicate() const{
     for (Word* word : words){
         auto* annotatedWord = (AnnotatedWord*) word;
-        if (annotatedWord->getArgument() != nullptr && annotatedWord->getArgument()->getArgumentType() == "PREDICATE"){
-            return true;
+        if (annotatedWord->getArgumentList() != nullptr){
+            if (annotatedWord->getArgumentList()->containsPredicate()) {
+                return true;
+            }
         }
     }
     return false;
@@ -58,8 +61,10 @@ bool AnnotatedSentence::containsPredicate() const{
 bool AnnotatedSentence::containsFramePredicate() const{
     for (Word* word : words){
         auto* annotatedWord = (AnnotatedWord*) word;
-        if (annotatedWord->getFrameElement() != nullptr && annotatedWord->getFrameElement()->getFrameElementType() == "PREDICATE"){
-            return true;
+        if (annotatedWord->getFrameElementList() != nullptr){
+            if (annotatedWord->getFrameElementList()->containsPredicate()) {
+                return true;
+            }
         }
     }
     return false;
@@ -72,17 +77,23 @@ bool AnnotatedSentence::containsFramePredicate() const{
  * @param currentId Replacement id.
  * @return Returns true, if any replacement has been done; false otherwise.
  */
-bool AnnotatedSentence::updateConnectedPredicate(const string& previousId, const string& currentId) {
+bool AnnotatedSentence::updateConnectedPredicate(const string& previousId, const string& currentId) const {
     bool modified = false;
     for (Word* word : words){
         auto* annotatedWord = (AnnotatedWord*) word;
-        if (annotatedWord->getArgument() != nullptr && !annotatedWord->getArgument()->getId().empty() && annotatedWord->getArgument()->getId() == previousId){
-            annotatedWord->setArgument(annotatedWord->getArgument()->getArgumentType() + "$" + currentId);
-            modified = true;
+        auto* argumentList = annotatedWord->getArgumentList();
+        if (argumentList != nullptr){
+            if (argumentList->containsPredicateWithId(previousId)) {
+                argumentList->updateConnectedId(previousId, currentId);
+                modified = true;
+            }
         }
-        if (annotatedWord->getFrameElement() != nullptr && !annotatedWord->getFrameElement()->getId().empty() && annotatedWord->getFrameElement()->getId() == previousId){
-            annotatedWord->setFrameElement(annotatedWord->getFrameElement()->getFrameElementType() + "$" + annotatedWord->getFrameElement()->getFrame() + "$" + currentId);
-            modified = true;
+        auto* frameElementList = annotatedWord->getFrameElementList();
+        if (frameElementList != nullptr) {
+            if (frameElementList->containsPredicateWithId(previousId)) {
+                frameElementList->updateConnectedId(previousId, currentId);
+                modified = true;
+            }
         }
     }
     return modified;
@@ -146,7 +157,7 @@ vector<AnnotatedWord *> AnnotatedSentence::predicateCandidates(FramesetList& fra
  * 1. Verb
  * 2. Its semantic tag is assigned
  * 3. A frameset exists for that semantic tag
- * @param framesetList Frameset list that contains all frames for Turkish
+ * @param frameNet Frameset list that contains all frames for Turkish
  * @return An array of words, which are verbs, semantic tags assigned, and framesetlist assigned for that tag.
  */
 vector<AnnotatedWord *> AnnotatedSentence::predicateFrameCandidates(FrameNet& frameNet) const{
@@ -224,7 +235,7 @@ void AnnotatedSentence::removeWord(int index) {
  * @param wordIndex Word index
  * @return List of literal candidates containing all possible root forms and multiword expressions.
  */
-vector<Literal> AnnotatedSentence::constructLiterals(WordNet& wordNet, FsmMorphologicalAnalyzer& fsm, int wordIndex) {
+vector<Literal> AnnotatedSentence::constructLiterals(const WordNet& wordNet, const FsmMorphologicalAnalyzer& fsm, int wordIndex) const {
     auto* word = (AnnotatedWord*) getWord(wordIndex);
     vector<Literal> possibleLiterals;
     MorphologicalParse* morphologicalParse = word->getParse();
@@ -260,7 +271,7 @@ vector<Literal> AnnotatedSentence::constructLiterals(WordNet& wordNet, FsmMorpho
  * @param wordIndex Word index
  * @return List of synset candidates containing all possible root forms and multiword expressions.
  */
-vector<SynSet> AnnotatedSentence::constructSynSets(WordNet& wordNet, FsmMorphologicalAnalyzer& fsm, int wordIndex) {
+vector<SynSet> AnnotatedSentence::constructSynSets(WordNet& wordNet, const FsmMorphologicalAnalyzer& fsm, int wordIndex) const {
     auto* word = (AnnotatedWord*) getWord(wordIndex);
     vector<SynSet> possibleSynSets;
     MorphologicalParse* morphologicalParse = word->getParse();
@@ -357,7 +368,7 @@ string AnnotatedSentence::toStems() const{
  * @param sentence Sentence to be compared.
  * @return A parser evaluation score object.
  */
-ParserEvaluationScore AnnotatedSentence::compareParses(AnnotatedSentence *sentence) const{
+ParserEvaluationScore AnnotatedSentence::compareParses(const AnnotatedSentence *sentence) const{
     ParserEvaluationScore score = ParserEvaluationScore();
     for (int i = 0; i < wordCount(); i++){
         UniversalDependencyRelation* relation1 = ((AnnotatedWord*) words.at(i))->getUniversalDependency();

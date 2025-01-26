@@ -89,7 +89,7 @@ TxtDictionary AnnotatedCorpus::createDictionary() const{
  * @param corpus Corpus to be compared.
  * @return A parser evaluation score object.
  */
-ParserEvaluationScore AnnotatedCorpus::compareParses(const AnnotatedCorpus& corpus) {
+ParserEvaluationScore AnnotatedCorpus::compareParses(const AnnotatedCorpus& corpus) const {
     ParserEvaluationScore result = ParserEvaluationScore();
     for (int i = 0; i < sentences.size(); i++){
         auto* sentence1 = (AnnotatedSentence*) sentences.at(i);

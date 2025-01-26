@@ -15,7 +15,7 @@ public:
     explicit AnnotatedCorpus(istream& inputFile);
     explicit AnnotatedCorpus(const string& folder);
     TxtDictionary createDictionary() const;
-    ParserEvaluationScore compareParses(const AnnotatedCorpus& corpus);
+    ParserEvaluationScore compareParses(const AnnotatedCorpus& corpus) const;
 };
 
 

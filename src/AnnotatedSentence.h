@@ -21,16 +21,16 @@ public:
     explicit AnnotatedSentence(const string& sentence);
     bool containsPredicate() const;
     bool containsFramePredicate() const;
-    bool updateConnectedPredicate(const string& previousId, const string& currentId);
+    bool updateConnectedPredicate(const string& previousId, const string& currentId) const;
     vector<AnnotatedWord*> predicateCandidates(FramesetList& framesetList) const;
     vector<AnnotatedWord *> predicateFrameCandidates(FrameNet& frameNet) const;
     vector<AnnotatedPhrase*> getShallowParseGroups() const;
     string getPredicate(int index) const;
     string toStems() const;
     void removeWord(int index);
-    ParserEvaluationScore compareParses(AnnotatedSentence* sentence) const;
-    vector<Literal> constructLiterals(WordNet& wordNet, FsmMorphologicalAnalyzer& fsm, int wordIndex);
-    vector<SynSet> constructSynSets(WordNet& wordNet, FsmMorphologicalAnalyzer& fsm, int wordIndex);
+    ParserEvaluationScore compareParses(const AnnotatedSentence* sentence) const;
+    vector<Literal> constructLiterals(const WordNet& wordNet, const FsmMorphologicalAnalyzer& fsm, int wordIndex) const;
+    vector<SynSet> constructSynSets(WordNet& wordNet, const FsmMorphologicalAnalyzer& fsm, int wordIndex) const;
 };
 
 

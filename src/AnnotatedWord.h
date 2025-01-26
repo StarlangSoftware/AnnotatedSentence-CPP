@@ -9,10 +9,10 @@
 #include <MorphologicalParse.h>
 #include <MetamorphicParse.h>
 #include <NamedEntityType.h>
-#include <Argument.h>
+#include <ArgumentList.h>
 #include <FsmParse.h>
 #include "Universal/UniversalDependencyRelation.h"
-#include <FrameElement.h>
+#include <FrameElementList.h>
 #include <PolarityType.h>
 #include "ViewLayerType.h"
 #include "Language.h"
@@ -36,8 +36,8 @@ private:
     MetamorphicParse* metamorphicParse = nullptr;
     string semantic;
     NamedEntityType* namedEntityType = nullptr;
-    Argument* argument = nullptr;
-    FrameElement* frameElement = nullptr;
+    ArgumentList* argumentList = nullptr;
+    FrameElementList* frameElementList = nullptr;
     PolarityType* polarity = nullptr;
     string shallowParse;
     Slot* slot = nullptr;
@@ -61,10 +61,10 @@ public:
     void setSemantic(const string& _semantic);
     NamedEntityType* getNamedEntity() const;
     void setNamedEntityType(const string& namedEntity);
-    Argument* getArgument() const;
-    void setArgument(const string& _argument);
-    FrameElement* getFrameElement() const;
-    void setFrameElement(const string& _frameElement);
+    ArgumentList* getArgumentList() const;
+    void setArgumentList(const string& _argument);
+    FrameElementList* getFrameElementList() const;
+    void setFrameElementList(const string& _frameElement);
     Slot* getSlot() const;
     void setSlot(const string& _slot);
     PolarityType* getPolarity() const;
@@ -78,7 +78,7 @@ public:
     void setCcg(const string& _ccg);
     string getPosTag() const;
     void setPosTag(const string& _posTag);
-    void checkGazetteer(Gazetteer gazetteer);
+    void checkGazetteer(const Gazetteer &gazetteer);
     Language getLanguage() const;
 };
 
