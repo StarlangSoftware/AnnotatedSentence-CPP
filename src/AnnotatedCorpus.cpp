@@ -11,7 +11,6 @@ using std::filesystem::directory_iterator;
  * name satisfying the given pattern inside the given folder. For each file inside that folder, the constructor
  * creates an AnnotatedSentence and puts in inside the list parseTrees.
  * @param folder Folder where all sentences reside.
- * @param fileList File list containing all sentences.
  */
 AnnotatedCorpus::AnnotatedCorpus(const string& folder) {
     ifstream sentenceFile;
@@ -22,7 +21,7 @@ AnnotatedCorpus::AnnotatedCorpus(const string& folder) {
             files.emplace_back(file.path());
         }
     }
-    sort(files.begin(), files.end());
+    ranges::sort(files);
     for (const string& file : files) {
         sentenceFile.open(file, ifstream::in);
         addSentence(new AnnotatedSentence(sentenceFile));

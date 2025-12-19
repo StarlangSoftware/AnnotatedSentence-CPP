@@ -22,8 +22,8 @@ public:
     bool containsPredicate() const;
     bool containsFramePredicate() const;
     bool updateConnectedPredicate(const string& previousId, const string& currentId) const;
-    vector<AnnotatedWord*> predicateCandidates(FramesetList& framesetList) const;
-    vector<AnnotatedWord *> predicateFrameCandidates(FrameNet& frameNet) const;
+    vector<AnnotatedWord*> predicateCandidates(const FramesetList& framesetList) const;
+    vector<AnnotatedWord *> predicateFrameCandidates(const FrameNet& frameNet) const;
     vector<AnnotatedPhrase*> getShallowParseGroups() const;
     string getPredicate(int index) const;
     string toStems() const;

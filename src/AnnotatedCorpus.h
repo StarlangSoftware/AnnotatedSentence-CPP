@@ -6,7 +6,6 @@
 #define ANNOTATEDSENTENCE_ANNOTATEDCORPUS_H
 
 #include "Dictionary/TxtDictionary.h"
-#include <FsmMorphologicalAnalyzer.h>
 #include <ParserEvaluationScore.h>
 #include "Corpus.h"
 class AnnotatedCorpus : public Corpus{
@@ -14,8 +13,8 @@ public:
     AnnotatedCorpus() = default;
     explicit AnnotatedCorpus(istream& inputFile);
     explicit AnnotatedCorpus(const string& folder);
-    TxtDictionary createDictionary() const;
-    ParserEvaluationScore compareParses(const AnnotatedCorpus& corpus) const;
+    [[nodiscard]] TxtDictionary createDictionary() const;
+    [[nodiscard]] ParserEvaluationScore compareParses(const AnnotatedCorpus& corpus) const;
 };
 
 

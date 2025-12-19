@@ -132,7 +132,7 @@ vector<AnnotatedPhrase *> AnnotatedSentence::getShallowParseGroups() const{
  * @param framesetList Frameset list that contains all frames for Turkish
  * @return An array of words, which are verbs, semantic tags assigned, and framesetlist assigned for that tag.
  */
-vector<AnnotatedWord *> AnnotatedSentence::predicateCandidates(FramesetList& framesetList) const{
+vector<AnnotatedWord *> AnnotatedSentence::predicateCandidates(const FramesetList& framesetList) const{
     vector<AnnotatedWord*> candidateList;
     for (Word* word : words){
         auto* annotatedWord = (AnnotatedWord*) word;
@@ -144,7 +144,7 @@ vector<AnnotatedWord *> AnnotatedSentence::predicateCandidates(FramesetList& fra
         for (int j = 0; j < words.size() - i - 1; j++){
             auto* annotatedWord = (AnnotatedWord*) words.at(j);
             auto* nextAnnotatedWord = (AnnotatedWord*) words.at(j + 1);
-            if (find(candidateList.begin(), candidateList.end(), annotatedWord) == candidateList.end() && find(candidateList.begin(), candidateList.end(), nextAnnotatedWord) != candidateList.end() && !annotatedWord->getSemantic().empty() && annotatedWord->getSemantic() == nextAnnotatedWord->getSemantic()){
+            if (ranges::find(candidateList, annotatedWord) == candidateList.end() && ranges::find(candidateList, nextAnnotatedWord) != candidateList.end() && !annotatedWord->getSemantic().empty() && annotatedWord->getSemantic() == nextAnnotatedWord->getSemantic()){
                 candidateList.emplace_back(annotatedWord);
             }
         }
@@ -160,7 +160,7 @@ vector<AnnotatedWord *> AnnotatedSentence::predicateCandidates(FramesetList& fra
  * @param frameNet Frameset list that contains all frames for Turkish
  * @return An array of words, which are verbs, semantic tags assigned, and framesetlist assigned for that tag.
  */
-vector<AnnotatedWord *> AnnotatedSentence::predicateFrameCandidates(FrameNet& frameNet) const{
+vector<AnnotatedWord *> AnnotatedSentence::predicateFrameCandidates(const FrameNet& frameNet) const{
     vector<AnnotatedWord*> candidateList;
     for (Word* word : words){
         auto* annotatedWord = (AnnotatedWord*) word;
@@ -172,7 +172,7 @@ vector<AnnotatedWord *> AnnotatedSentence::predicateFrameCandidates(FrameNet& fr
         for (int j = 0; j < words.size() - i - 1; j++){
             auto* annotatedWord = (AnnotatedWord*) words.at(j);
             auto* nextAnnotatedWord = (AnnotatedWord*) words.at(j + 1);
-            if (find(candidateList.begin(), candidateList.end(), annotatedWord) == candidateList.end() && find(candidateList.begin(), candidateList.end(), nextAnnotatedWord) != candidateList.end() && !annotatedWord->getSemantic().empty() && annotatedWord->getSemantic() == nextAnnotatedWord->getSemantic()){
+            if (ranges::find(candidateList, annotatedWord) == candidateList.end() && ranges::find(candidateList, nextAnnotatedWord) != candidateList.end() && !annotatedWord->getSemantic().empty() && annotatedWord->getSemantic() == nextAnnotatedWord->getSemantic()){
                 candidateList.emplace_back(annotatedWord);
             }
         }
