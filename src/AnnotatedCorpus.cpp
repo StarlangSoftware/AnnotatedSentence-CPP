@@ -3,6 +3,9 @@
 //
 
 #include "AnnotatedCorpus.h"
+
+#include <filesystem>
+
 #include "AnnotatedSentence.h"
 using std::filesystem::directory_iterator;
 
